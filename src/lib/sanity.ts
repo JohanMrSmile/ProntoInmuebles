@@ -5,7 +5,7 @@ import { createClient } from 'next-sanity'
  * Configured with caching strategy: revalidate every 3600s (1 hour)
  */
 
-export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || ''
+export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'y66p1066' // Placeholder to prevent build crash
 export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 export const apiVersion = '2024-01-01'
 

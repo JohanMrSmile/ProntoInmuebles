@@ -42,9 +42,9 @@ export function rateLimit(
 
 export function cleanRateLimits() {
   const now = Date.now();
-  for (const [key, info] of limits.entries()) {
+  limits.forEach((info, key) => {
     if (now > info.resetTime) {
       limits.delete(key);
     }
-  }
+  });
 }
