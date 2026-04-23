@@ -24,8 +24,8 @@ const PROPERTY_LIST_FIELDS = `
   "baths": bathrooms,
   "sqft": area,
   description,
-  lat,
-  lng,
+  "lat": mapLocation.lat,
+  "lng": mapLocation.lng,
   featured
 `
 
@@ -44,8 +44,8 @@ const PROPERTY_DETAIL_FIELDS = `
   "baths": bathrooms,
   "sqft": area,
   description,
-  lat,
-  lng,
+  "lat": mapLocation.lat,
+  "lng": mapLocation.lng,
   featured
 `
 

@@ -109,16 +109,10 @@ export default defineType({
       validation: (Rule) => Rule.required().min(20),
     }),
     defineField({
-      name: 'lat',
-      title: 'Latitud',
-      type: 'number',
-      description: 'Coordenada para el mapa. Ej: 10.3956',
-    }),
-    defineField({
-      name: 'lng',
-      title: 'Longitud',
-      type: 'number',
-      description: 'Coordenada para el mapa. Ej: -75.5234',
+      name: 'mapLocation',
+      title: 'Ubicación en el Mapa',
+      type: 'mapLocation',
+      description: 'Haz clic en el mapa para fijar la ubicación exacta. Esto evita errores manuales de coordenadas.',
     }),
     defineField({
       name: 'featured',
