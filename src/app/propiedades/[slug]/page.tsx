@@ -1,19 +1,46 @@
-﻿import { ArrowLeft, MapPin, Bed, Bath, Home, Calendar, Phone, Shield, Star } from 'lucide-react'
+import { ArrowLeft, MapPin, Bed, Bath, Home, Calendar, Phone, Shield, Star } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { properties } from '@/lib/properties'
+import { getPropertyBySlug, getAllPropertySlugs } from '@/lib/sanity'
+import { properties as staticProperties } from '@/lib/properties'
 import { getWhatsAppLink, siteConfig } from '@/lib/config'
 import FadeIn from '@/components/FadeIn'
 import { Metadata, ResolvingMetadata } from 'next'
 import WhatsAppCTA from '@/components/WhatsAppCTA'
 import { getPropertySchema } from '@/lib/schema'
+import type { Property } from '@/lib/types'
 
-type Props = { params: { id: string } }
+type Props = { params: { slug: string } }
+
+/**
+ * Fetch property: try Sanity first, then fallback to static data
+ */
+async function getProperty(slug: string): Promise<Property | null> {
+  // Try Sanity first
+  const sanityProperty = await getPropertyBySlug(slug)
+  if (sanityProperty) return sanityProperty
+
+  // Fallback to static data
+  const staticProperty = staticProperties.find(p => p.slug === slug)
+  return staticProperty || null
+}
+
+export async function generateStaticParams() {
+  // Get slugs from Sanity
+  const sanitySlugs = await getAllPropertySlugs()
+
+  // Combine with static slugs
+  const staticSlugs = staticProperties.map(p => p.slug)
+  const allSlugs = Array.from(new Set([...sanitySlugs, ...staticSlugs]))
+
+  return allSlugs.map(slug => ({ slug }))
+}
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const property = properties.find(p => p.id.toString() === params.id)
+  const property = await getProperty(params.slug)
   if (!property) return { title: 'Propiedad no encontrada' }
+
   return {
     title: `${property.title} en ${property.location}`,
     description: `${property.title}, ${property.propertyType} con ${property.beds} habitaciones en ${property.location}. Precio: ${property.price}.`,
@@ -25,8 +52,8 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   }
 }
 
-export default function PropertyDetail({ params }: Props) {
-  const property = properties.find(p => p.id.toString() === params.id)
+export default async function PropertyDetail({ params }: Props) {
+  const property = await getProperty(params.slug)
   if (!property) notFound()
 
   const propertySchema = getPropertySchema(property)
@@ -36,15 +63,15 @@ export default function PropertyDetail({ params }: Props) {
 
   const STATS = [
     { icon: Bed,      label: 'Habitaciones', value: property.beds        },
-    { icon: Bath,     label: 'Banos',        value: property.baths       },
-    { icon: Home,     label: 'Superficie',   value: `${property.sqft}m2` },
+    { icon: Bath,     label: 'Baños',        value: property.baths       },
+    { icon: Home,     label: 'Superficie',   value: `${property.sqft}m²` },
     { icon: Calendar, label: 'Estado',       value: 'Disponible'         },
   ]
 
   const TRUST_ITEMS = [
-    'Verificacion tecnica completa',
-    'Asesoria juridica incluida',
-    'Documentacion al dia',
+    'Verificación técnica completa',
+    'Asesoría jurídica incluida',
+    'Documentación al día',
     'Tour virtual disponible',
   ]
 
@@ -60,7 +87,7 @@ export default function PropertyDetail({ params }: Props) {
             <div className="w-8 h-8 rounded-xl bg-white shadow-soft border border-neutral-100 flex items-center justify-center">
               <ArrowLeft className="w-4 h-4" />
             </div>
-            Volver al catalogo
+            Volver al catálogo
           </Link>
         </nav>
 
@@ -72,12 +99,14 @@ export default function PropertyDetail({ params }: Props) {
                 <span className="badge bg-white/95 backdrop-blur-sm text-neutral-800 shadow-soft font-semibold">{property.propertyType}</span>
                 <span className={`badge text-white font-semibold ${property.type === 'Venta' ? 'bg-primary-600' : 'bg-secondary-600'}`}>{property.type}</span>
               </div>
-              <div className="absolute bottom-4 right-4">
-                <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-xl px-3 py-1.5">
-                  <Star className="w-3.5 h-3.5 text-gold-400 fill-gold-400" />
-                  <span className="text-white text-xs font-semibold font-sans">Propiedad destacada</span>
+              {property.featured && (
+                <div className="absolute bottom-4 right-4">
+                  <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-xl px-3 py-1.5">
+                    <Star className="w-3.5 h-3.5 text-gold-400 fill-gold-400" />
+                    <span className="text-white text-xs font-semibold font-sans">Propiedad destacada</span>
+                  </div>
                 </div>
-              </div>
+              )}
             </FadeIn>
 
             <div className="card p-7">
@@ -101,7 +130,7 @@ export default function PropertyDetail({ params }: Props) {
             <div className="card p-7">
               <h2 className="font-display font-bold text-xl text-neutral-900 mb-4 flex items-center gap-3">
                 <span className="w-8 h-1 bg-primary-500 rounded-full flex-shrink-0" />
-                Descripcion
+                Descripción
               </h2>
               <p className="text-neutral-600 font-sans text-base leading-relaxed">{property.description}</p>
             </div>
@@ -118,7 +147,7 @@ export default function PropertyDetail({ params }: Props) {
                       {property.type === 'Arriendo' ? 'Por mes' : 'Precio final'}
                     </p>
                     <div className="flex flex-col gap-3">
-                      <WhatsAppCTA whatsappUrl={whatsappUrl} propertyId={property.id} />
+                      <WhatsAppCTA whatsappUrl={whatsappUrl} propertyId={property._id} />
                       <Link href="/contacto" className="flex items-center justify-center gap-2 py-3 rounded-button border-2 border-white/20 text-white text-sm font-semibold font-sans hover:bg-white/10 transition-all">
                         <Calendar className="w-4 h-4 text-gold-400" />
                         Agendar visita
@@ -140,7 +169,7 @@ export default function PropertyDetail({ params }: Props) {
               <div className="card p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Shield className="w-4 h-4 text-secondary-500" />
-                  <h4 className="font-display font-bold text-base text-neutral-900">Garantia inmobiliaria</h4>
+                  <h4 className="font-display font-bold text-base text-neutral-900">Garantía inmobiliaria</h4>
                 </div>
                 <ul className="flex flex-col gap-2.5">
                   {TRUST_ITEMS.map((item, i) => (

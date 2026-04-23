@@ -1,11 +1,11 @@
-﻿'use client'
+'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { Home, MapPin, Bed, Bath, ArrowRight, SlidersHorizontal, Search, X, DollarSign, Building, LayoutGrid } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useMemo, useRef, useCallback } from 'react'
-import { properties } from '@/lib/properties'
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
+import type { Property } from '@/lib/types'
 import dynamic from 'next/dynamic'
 
 const PropertyMap = dynamic(() => import('@/components/PropertyMap'), {
@@ -17,7 +17,11 @@ const PropertyMap = dynamic(() => import('@/components/PropertyMap'), {
   ),
 })
 
-export default function PropiedadesContent() {
+type PropiedadesContentProps = {
+  properties: Property[]
+}
+
+export default function PropiedadesContent({ properties }: PropiedadesContentProps) {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
   const [filters, setFilters] = useState({
     search: '',
@@ -26,10 +30,17 @@ export default function PropiedadesContent() {
     minPrice: '',
     maxPrice: '',
   })
-  const [activePropertyId,  setActivePropertyId]  = useState<number | null>(null)
-  const [hoveredPropertyId, setHoveredPropertyId] = useState<number | null>(null)
-  const cardRefsMap       = useRef<Map<number, HTMLDivElement>>(new Map())
+  const [activePropertyId,  setActivePropertyId]  = useState<string | null>(null)
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 6
+  const cardRefsMap       = useRef<Map<string, HTMLDivElement>>(new Map())
   const activeTimeoutRef  = useRef<NodeJS.Timeout | null>(null)
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [filters])
 
   const filteredProperties = useMemo(() => {
     return properties.filter(p => {
@@ -41,21 +52,28 @@ export default function PropiedadesContent() {
       const max   = filters.maxPrice ? parseInt(filters.maxPrice) : Infinity
       return matchSearch && matchPropertyType && matchTransactionType && price >= min && price <= max
     })
-  }, [filters])
+  }, [filters, properties])
 
   const displayProperties = useMemo(() => {
     if (!activePropertyId) return filteredProperties
-    const active = filteredProperties.find(p => p.id === activePropertyId)
+    const active = filteredProperties.find(p => p._id === activePropertyId)
     if (!active) return filteredProperties
-    return [active, ...filteredProperties.filter(p => p.id !== activePropertyId)]
+    return [active, ...filteredProperties.filter(p => p._id !== activePropertyId)]
   }, [filteredProperties, activePropertyId])
 
-  const handlePropertySelect = useCallback((id: number | null) => {
+  const paginatedProperties = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+    return displayProperties.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+  }, [displayProperties, currentPage])
+
+  const totalPages = Math.ceil(displayProperties.length / ITEMS_PER_PAGE)
+
+  const handlePropertySelect = useCallback((id: string | null) => {
     if (activeTimeoutRef.current) { clearTimeout(activeTimeoutRef.current); activeTimeoutRef.current = null }
     setActivePropertyId(id)
   }, [])
 
-  const handleMarkerHover = useCallback((id: number | null) => { setHoveredPropertyId(id) }, [])
+  const handleMarkerHover = useCallback((id: string | null) => { setHoveredPropertyId(id) }, [])
 
   const resetFilters = () => setFilters({ search: '', propertyType: 'Todas', transactionType: 'Todas', minPrice: '', maxPrice: '' })
 
@@ -173,22 +191,22 @@ export default function PropiedadesContent() {
           <div className="w-full xl:w-[55%]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <AnimatePresence mode="popLayout">
-                {displayProperties.length > 0 ? displayProperties.map(property => (
+                {paginatedProperties.length > 0 ? paginatedProperties.map(property => (
                   <motion.div
-                    key={property.id}
+                    key={property._id}
                     layout
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.3 }}
-                    ref={el => { if (el) cardRefsMap.current.set(property.id, el); else cardRefsMap.current.delete(property.id) }}
-                    onMouseEnter={() => handleMarkerHover(property.id)}
+                    ref={el => { if (el) cardRefsMap.current.set(property._id, el); else cardRefsMap.current.delete(property._id) }}
+                    onMouseEnter={() => handleMarkerHover(property._id)}
                     onMouseLeave={() => handleMarkerHover(null)}
                     className={`property-card transition-all duration-500 ${
-                      activePropertyId  === property.id ? 'active-highlight' : ''
-                    } ${hoveredPropertyId === property.id && activePropertyId !== property.id ? 'hovered-highlight' : ''}`}
+                      activePropertyId  === property._id ? 'active-highlight' : ''
+                    } ${hoveredPropertyId === property._id && activePropertyId !== property._id ? 'hovered-highlight' : ''}`}
                   >
-                    <Link href={`/propiedades/${property.id}`} className="block">
+                    <Link href={`/propiedades/${property.slug}`} className="block">
                       <div className="property-card-image">
                         <Image src={property.image} alt={property.title} fill className="object-cover" unoptimized />
                         <div className="absolute top-3 left-3 flex gap-1.5">
@@ -197,7 +215,7 @@ export default function PropiedadesContent() {
                             {property.type}
                           </span>
                         </div>
-                        {activePropertyId === property.id && (
+                        {activePropertyId === property._id && (
                           <button
                             onClick={e => { e.preventDefault(); e.stopPropagation(); setActivePropertyId(null) }}
                             className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-xl shadow-soft flex items-center justify-center text-neutral-700 hover:bg-gold-50 transition-colors"
@@ -246,6 +264,50 @@ export default function PropiedadesContent() {
                 )}
               </AnimatePresence>
             </div>
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 mt-8">
+                <button 
+                  onClick={() => {
+                    setCurrentPage(p => Math.max(1, p - 1))
+                    window.scrollTo({ top: 300, behavior: 'smooth' })
+                  }} 
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-white border border-neutral-200 rounded-button text-sm font-semibold text-neutral-600 disabled:opacity-50 hover:bg-neutral-50 transition-colors"
+                >
+                  Anterior
+                </button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setCurrentPage(i + 1)
+                        window.scrollTo({ top: 300, behavior: 'smooth' })
+                      }}
+                      className={`w-8 h-8 flex items-center justify-center rounded-button text-sm font-semibold transition-colors ${
+                        currentPage === i + 1 
+                          ? 'bg-primary-500 text-white' 
+                          : 'bg-white text-neutral-600 hover:bg-neutral-50 border border-transparent hover:border-neutral-200'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button 
+                  onClick={() => {
+                    setCurrentPage(p => Math.min(totalPages, p + 1))
+                    window.scrollTo({ top: 300, behavior: 'smooth' })
+                  }} 
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-white border border-neutral-200 rounded-button text-sm font-semibold text-neutral-600 disabled:opacity-50 hover:bg-neutral-50 transition-colors"
+                >
+                  Siguiente
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Map */}

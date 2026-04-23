@@ -1,96 +1,113 @@
-import { createClient } from 'next-sanity'
+import { client } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
+import type { Property } from '@/lib/types'
 
 /**
- * Sanity CMS Client
- * Configured with caching strategy: revalidate every 3600s (1 hour)
+ * Sanity CMS Data Layer
+ * All GROQ queries and data fetching for properties.
+ * Uses the official Sanity client from /sanity/lib/client.ts
  */
 
-export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'y66p1066' // Placeholder to prevent build crash
-export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
-export const apiVersion = '2024-01-01'
+// ─── GROQ Queries ────────────────────────────────────────
 
-export const sanityClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false, // We use Next.js caching instead of Sanity's CDN
-})
+const PROPERTY_LIST_FIELDS = `
+  _id,
+  title,
+  "slug": slug.current,
+  location,
+  price,
+  priceValue,
+  "image": image.asset->url,
+  propertyType,
+  "type": transactionType,
+  "beds": bedrooms,
+  "baths": bathrooms,
+  "sqft": area,
+  description,
+  lat,
+  lng,
+  featured
+`
 
-// Optional: Client for draft/preview mode or writing (requires token)
-export const sanityWriteClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-  token: process.env.SANITY_API_READ_TOKEN, // Keep this token secure
-})
+const PROPERTY_DETAIL_FIELDS = `
+  _id,
+  title,
+  "slug": slug.current,
+  location,
+  price,
+  priceValue,
+  "image": image.asset->url,
+  "gallery": gallery[].asset->url,
+  propertyType,
+  "type": transactionType,
+  "beds": bedrooms,
+  "baths": bathrooms,
+  "sqft": area,
+  description,
+  lat,
+  lng,
+  featured
+`
+
+// ─── Fetch Functions ────────────────────────────────────
 
 /**
- * Fetch products from Sanity
+ * Fetch all properties from Sanity
+ * Returns normalized Property[] matching the shared type
  */
-export async function getProducts(params: { category?: string, page?: number, per_page?: number } = {}) {
-  const page = params.page || 1
-  const limit = params.per_page || 10
-  const start = (page - 1) * limit
-  const end = start + limit - 1
+export async function getProperties(): Promise<Property[]> {
+  const query = `*[_type == "property" && defined(slug.current)] | order(featured desc, _createdAt desc) {
+    ${PROPERTY_LIST_FIELDS}
+  }`
 
-  let query = `*[_type == "product" && defined(slug.current)]`
-  
-  if (params.category) {
-    query = `*[_type == "product" && references(*[_type == "category" && slug.current == $category]._id)]`
+  try {
+    const data = await client.fetch(query, {}, {
+      next: { revalidate: process.env.NODE_ENV === 'development' ? 0 : 3600 }
+    })
+    return data || []
+  } catch (error) {
+    console.error('[Sanity] Error fetching properties:', error)
+    return []
   }
-
-  query += ` | order(createdAt desc) [${start}..${end}] {
-    _id,
-    title,
-    slug,
-    price,
-    "imageUrl": mainImage.asset->url,
-    category->{title, slug}
-  }`
-
-  const data = await sanityClient.fetch(query, { category: params.category }, {
-    next: { revalidate: 3600 }
-  })
-
-  return data
 }
 
 /**
- * Fetch product categories from Sanity
+ * Fetch a single property by slug
  */
-export async function getCategories() {
-  const query = `*[_type == "category"] | order(title asc) {
-    _id,
-    title,
-    slug,
-    "imageUrl": image.asset->url
+export async function getPropertyBySlug(slug: string): Promise<Property | null> {
+  const query = `*[_type == "property" && slug.current == $slug][0] {
+    ${PROPERTY_DETAIL_FIELDS}
   }`
 
-  const data = await sanityClient.fetch(query, {}, {
-    next: { revalidate: 3600 }
-  })
-
-  return data
+  try {
+    const data = await client.fetch(query, { slug }, {
+      next: { revalidate: process.env.NODE_ENV === 'development' ? 0 : 3600 }
+    })
+    return data || null
+  } catch (error) {
+    console.error('[Sanity] Error fetching property by slug:', error)
+    return null
+  }
 }
 
 /**
- * Fetch single product by slug
+ * Get all property slugs for generateStaticParams
  */
-export async function getProductBySlug(slug: string) {
-  const query = `*[_type == "product" && slug.current == $slug][0] {
-    _id,
-    title,
-    slug,
-    price,
-    description,
-    "imageUrl": mainImage.asset->url,
-    category->{title, slug}
-  }`
+export async function getAllPropertySlugs(): Promise<string[]> {
+  const query = `*[_type == "property" && defined(slug.current)].slug.current`
 
-  const data = await sanityClient.fetch(query, { slug }, {
-    next: { revalidate: 3600 }
-  })
-
-  return data
+  try {
+    const slugs = await client.fetch(query, {}, {
+      next: { revalidate: 3600 }
+    })
+    return slugs || []
+  } catch (error) {
+    console.error('[Sanity] Error fetching slugs:', error)
+    return []
+  }
 }
+
+/**
+ * Image URL helper — re-export for convenience
+ */
+export { urlFor }

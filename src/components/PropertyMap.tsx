@@ -2,29 +2,14 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import 'leaflet/dist/leaflet.css'
-
-type Property = {
-  id: number;
-  title: string;
-  price: string;
-  priceValue: number;
-  location: string;
-  lat: number;
-  lng: number;
-  image: string;
-  type: string;
-  beds: number;
-  baths: number;
-  sqft: number;
-  propertyType: string;
-}
+import type { Property } from '@/lib/types'
 
 type PropertyMapProps = {
   properties: Property[];
-  activePropertyId: number | null;
-  hoveredPropertyId: number | null;
-  onMarkerClick: (id: number | null) => void;
-  onMarkerHover: (id: number | null) => void;
+  activePropertyId: string | null;
+  hoveredPropertyId: string | null;
+  onMarkerClick: (id: string | null) => void;
+  onMarkerHover: (id: string | null) => void;
 }
 
 export default function PropertyMap({ 
@@ -36,10 +21,10 @@ export default function PropertyMap({
 }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
-  const markersMapRef = useRef<Map<number, any>>(new Map())
+  const markersMapRef = useRef<Map<string, any>>(new Map())
   const leafletRef = useRef<any>(null)
   const [ready, setReady] = useState(false)
-  const propertiesByIdRef = useRef<Map<number, Property>>(new Map())
+  const propertiesByIdRef = useRef<Map<string, Property>>(new Map())
 
   // Icon cache
   const iconsRef = useRef<{ green: any; blue: any; active: any } | null>(null)
@@ -100,7 +85,7 @@ export default function PropertyMap({
         scrollWheelZoom: false,
         preferCanvas: true,
         zoomControl: true,
-        closePopupOnClick: false, // SURGICAL: Don't close on click map
+        closePopupOnClick: false,
       })
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -108,7 +93,6 @@ export default function PropertyMap({
         maxZoom: 19,
       }).addTo(map)
 
-      // Scroll zooms map when cursor is over it. Also prevent page scroll while over map.
       const stopWheel = (e: any) => {
         L.DomEvent.stop(e)
       }
@@ -132,7 +116,6 @@ export default function PropertyMap({
         L.DomEvent.off(mapContainer, 'wheel', stopWheel)
       }
 
-      // MANUAL DISMISS: Al hacer clic en zona vacía del mapa, limpiar selección y cerrar popup
       map.on('click', () => {
         map.closePopup()
         onMarkerClick(null)
@@ -175,7 +158,7 @@ export default function PropertyMap({
 
     properties.forEach(property => {
       if (!property.lat || !property.lng) return
-      propertiesByIdRef.current.set(property.id, property)
+      propertiesByIdRef.current.set(property._id, property)
       bounds.push([property.lat, property.lng])
 
       const icon = property.type === 'Venta' ? icons.green : icons.blue
@@ -184,7 +167,7 @@ export default function PropertyMap({
         riseOnHover: true,
       }).addTo(map)
 
-      // Content Injection
+      // Content Injection — uses slug for the link
       const popupContent = `
         <div style="width:260px;font-family:inherit;line-height:1.4">
           <div style="position:relative;height:140px;overflow:hidden;border-radius:12px;margin:1px">
@@ -198,7 +181,7 @@ export default function PropertyMap({
               <span>🏠 ${property.propertyType}</span>
               <span>🛌 ${property.beds} Hab</span>
             </div>
-            <a href="/propiedades/${property.id}" 
+            <a href="/propiedades/${property.slug}" 
                style="display:block;text-align:center;padding:10px;background:#1a1a2e;color:white;border-radius:12px;font-size:11px;font-weight:700;text-decoration:none;text-transform:uppercase;">
               Ver Detalles
             </a>
@@ -210,33 +193,29 @@ export default function PropertyMap({
         maxWidth: 280,
         className: 'custom-property-popup',
         autoPan: true,
-        autoClose: false, // SURGICAL: Don't close other popups automatically if controlled
-        closeOnClick: false // SURGICAL: Keep open when clicking map
+        autoClose: false,
+        closeOnClick: false
       })
 
       // Event Listeners
       marker.on('click', () => {
-        onMarkerClick(property.id)
-        // Manual open handles the "staying open" requirement better
+        onMarkerClick(property._id)
         marker.openPopup() 
       })
 
-      marker.on('mouseover', () => onMarkerHover(property.id))
+      marker.on('mouseover', () => onMarkerHover(property._id))
       marker.on('mouseout', () => onMarkerHover(null))
 
       marker.on('popupclose', () => {
-        // Solo limpiar si esta propiedad era la activa
-        // Nota: esto puede dispararse al abrir otra, así que el manejo de estado en PropiedadesContent es clave
         onMarkerHover(null) 
       })
 
-      markersMapRef.current.set(property.id, marker)
+      markersMapRef.current.set(property._id, marker)
     })
 
     if (bounds.length > 0) {
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 })
     }
-    // We don't want selection/hover changing to trigger this effect
   }, [properties, ready, createIcons, onMarkerClick, onMarkerHover])
 
   // 3. Independent Sync of Selection/Hover state (NO RE-CREATION)
@@ -252,20 +231,16 @@ export default function PropertyMap({
       if (!property) return
       
       if (id === targetId) {
-        // FAST CLEANUP: Cambio instantáneo de icono
         marker.setIcon(icons.active)
         marker.setZIndexOffset(1000)
         
-        // Si es la activa (clic), asegurar que el popup esté abierto y centrado
         if (id === activePropertyId) {
-          // Usar flyTo para un movimiento "líquido"
           map.flyTo(marker.getLatLng(), 15, { animate: true, duration: 0.8 })
           if (!marker.isPopupOpen()) {
             marker.openPopup()
           }
         }
       } else {
-        // RESET: Volver al estado normal inmediatamente
         const normalIcon = property.type === 'Venta' ? icons.green : icons.blue
         marker.setIcon(normalIcon)
         marker.setZIndexOffset(0)

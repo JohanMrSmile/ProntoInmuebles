@@ -7,7 +7,6 @@ import { X, MessageCircle, MapPin, Expand, Images } from 'lucide-react'
 import { getWhatsAppLink } from '@/lib/config'
 import { trackWhatsAppLead } from '@/lib/analytics'
 import { getUTMSummary } from '@/lib/utm'
-import { getProducts } from '@/lib/sanity'
 
 type Project = typeof PROJECTS[0]
 
@@ -25,31 +24,8 @@ const PROJECTS = [
 export default function Gallery() {
   const [active,   setActive]   = useState('Todos')
   const [lightbox, setLightbox] = useState<any | null>(null)
-  const [projects, setProjects] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    async function init() {
-      try {
-        const data = await getProducts({ per_page: 12 })
-        const mapped = data.map((p: any) => ({
-          id: p._id,
-          title: p.title,
-          category: p.category?.title || 'General',
-          location: 'Cartagena, CO',
-          image: p.imageUrl,
-          wide: p.title.length > 25 // Just a logic for the UI grid
-        }))
-        setProjects(mapped)
-      } catch (err) {
-        console.error('Error loading Sanity projects:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    init()
-  }, [])
-
+  const projects = PROJECTS
   const filtered = active === 'Todos' ? projects : projects.filter(p => p.category === active)
 
   // Close lightbox with Escape key

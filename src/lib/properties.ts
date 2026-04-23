@@ -1,7 +1,14 @@
-export const properties = [
+import type { Property } from '@/lib/types'
+
+/**
+ * Static property data — used as fallback when Sanity has no content yet.
+ * Once you populate Sanity, this file can be removed.
+ */
+export const properties: Property[] = [
   {
-    id: 1,
+    _id: 'static-1',
     title: 'Penthouse Vista al Mar Bocagrande',
+    slug: 'penthouse-vista-al-mar-bocagrande',
     price: '$1.950.000.000',
     priceValue: 1950000000,
     location: 'Bocagrande, Cartagena',
@@ -13,11 +20,13 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
     type: 'Venta',
     propertyType: 'Apartamento',
-    description: 'Espectacular penthouse en el corazón de Bocagrande con vistas panorámicas al mar Caribe. Terrazas amplias, acabados de lujo y cocina tipo americano. Edificio con piscina, spa y acceso directo a playa privada. La joya del sector más exclusivo de Cartagena.'
+    description: 'Espectacular penthouse en el corazón de Bocagrande con vistas panorámicas al mar Caribe. Terrazas amplias, acabados de lujo y cocina tipo americano. Edificio con piscina, spa y acceso directo a playa privada. La joya del sector más exclusivo de Cartagena.',
+    featured: true,
   },
   {
-    id: 2,
+    _id: 'static-2',
     title: 'Casa Colonial Centro Histórico',
+    slug: 'casa-colonial-centro-historico',
     price: '$2.800.000.000',
     priceValue: 2800000000,
     location: 'Centro Histórico, Cartagena',
@@ -29,11 +38,13 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800&q=80',
     type: 'Venta',
     propertyType: 'Casa',
-    description: 'Magnífica casa colonial restaurada en el corazón amurallado de Cartagena. Patios internos con vegetación tropical, techos altos y ventanas en madera originales combinadas con acabados modernos. Patrimonio vivo de la historia cartagenera con valor de inversión excepcional.'
+    description: 'Magnífica casa colonial restaurada en el corazón amurallado de Cartagena. Patios internos con vegetación tropical, techos altos y ventanas en madera originales combinadas con acabados modernos. Patrimonio vivo de la historia cartagenera con valor de inversión excepcional.',
+    featured: true,
   },
   {
-    id: 3,
+    _id: 'static-3',
     title: 'Apartamento Frente al Mar El Laguito',
+    slug: 'apartamento-frente-al-mar-el-laguito',
     price: '$5.200.000 / mes',
     priceValue: 5200000,
     location: 'El Laguito, Cartagena',
@@ -45,11 +56,12 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80',
     type: 'Arriendo',
     propertyType: 'Apartamento',
-    description: 'Moderno apartamento en primera línea de playa en El Laguito. Vista al mar desde sala y habitación principal. Totalmente amoblado con equipos de última tecnología. Ideal para ejecutivos o temporada vacacional. Edificio con seguridad 24/7 y acceso a playa exclusiva.'
+    description: 'Moderno apartamento en primera línea de playa en El Laguito. Vista al mar desde sala y habitación principal. Totalmente amoblado con equipos de última tecnología. Ideal para ejecutivos o temporada vacacional. Edificio con seguridad 24/7 y acceso a playa exclusiva.',
   },
   {
-    id: 4,
+    _id: 'static-4',
     title: 'Loft Boutique Getsemaní',
+    slug: 'loft-boutique-getsemani',
     price: '$750.000.000',
     priceValue: 750000000,
     location: 'Getsemaní, Cartagena',
@@ -61,11 +73,12 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=80',
     type: 'Venta',
     propertyType: 'Loft',
-    description: 'Loft de diseño contemporáneo en el barrio más vibrante de Cartagena. Techos altos, ladrillo a la vista y acabados artesanales únicos. Rodeado de arte urbano, restaurantes de moda y vida nocturna. Altísima rentabilidad como Airbnb con ocupación superior al 85%.'
+    description: 'Loft de diseño contemporáneo en el barrio más vibrante de Cartagena. Techos altos, ladrillo a la vista y acabados artesanales únicos. Rodeado de arte urbano, restaurantes de moda y vida nocturna. Altísima rentabilidad como Airbnb con ocupación superior al 85%.',
   },
   {
-    id: 5,
+    _id: 'static-5',
     title: 'Casa Residencial Club Manga',
+    slug: 'casa-residencial-club-manga',
     price: '$6.500.000 / mes',
     priceValue: 6500000,
     location: 'Manga, Cartagena',
@@ -77,11 +90,12 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80',
     type: 'Arriendo',
     propertyType: 'Casa',
-    description: 'Amplia casa familiar en Manga, uno de los sectores más tradicionales y seguros de Cartagena. Amplios jardines, zona de BBQ, piscina y garaje doble. Conjunto cerrado con portería 24/7. Perfecta para familias que buscan comodidad y tranquilidad cerca al centro.'
+    description: 'Amplia casa familiar en Manga, uno de los sectores más tradicionales y seguros de Cartagena. Amplios jardines, zona de BBQ, piscina y garaje doble. Conjunto cerrado con portería 24/7. Perfecta para familias que buscan comodidad y tranquilidad cerca al centro.',
   },
   {
-    id: 6,
+    _id: 'static-6',
     title: 'Estudio Premium Marbella',
+    slug: 'estudio-premium-marbella',
     price: '$380.000.000',
     priceValue: 380000000,
     location: 'Marbella, Cartagena',
@@ -93,11 +107,12 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
     type: 'Venta',
     propertyType: 'Estudio',
-    description: 'Estudio completamente amoblado y equipado en Marbella. Ideal para inversión en renta corta o larga. Vista parcial al mar, edificio con piscina y gimnasio. Retorno de inversión estimado del 9% anual. Listo para entregar y comenzar a generar ingresos desde el primer día.'
+    description: 'Estudio completamente amoblado y equipado en Marbella. Ideal para inversión en renta corta o larga. Vista parcial al mar, edificio con piscina y gimnasio. Retorno de inversión estimado del 9% anual. Listo para entregar y comenzar a generar ingresos desde el primer día.',
   },
   {
-    id: 7,
+    _id: 'static-7',
     title: 'Dúplex Exclusivo Castillogrande',
+    slug: 'duplex-exclusivo-castillogrande',
     price: '$1.350.000.000',
     priceValue: 1350000000,
     location: 'Castillogrande, Cartagena',
@@ -109,11 +124,12 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
     type: 'Venta',
     propertyType: 'Apartamento',
-    description: 'Elegante dúplex en el sector más exclusivo de Cartagena. Primera planta con zona social amplia, cocina italiana y terraza con jacuzzi. Segunda planta con suite principal y vista al mar. Edificio boutique de solo 8 unidades con servicio de concierge.'
+    description: 'Elegante dúplex en el sector más exclusivo de Cartagena. Primera planta con zona social amplia, cocina italiana y terraza con jacuzzi. Segunda planta con suite principal y vista al mar. Edificio boutique de solo 8 unidades con servicio de concierge.',
   },
   {
-    id: 8,
+    _id: 'static-8',
     title: 'Apartamento Familiar Crespo',
+    slug: 'apartamento-familiar-crespo',
     price: '$920.000.000',
     priceValue: 920000000,
     location: 'Crespo, Cartagena',
@@ -125,11 +141,12 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80',
     type: 'Venta',
     propertyType: 'Apartamento',
-    description: 'Cómodo y amplio apartamento en Crespo, a pocos minutos del aeropuerto y las playas. Conjunto residencial con piscina, zona deportiva y parques. Ideal para familias. Colegios, centros comerciales y vías principales a distancia peatonal. Excelente valorización.'
+    description: 'Cómodo y amplio apartamento en Crespo, a pocos minutos del aeropuerto y las playas. Conjunto residencial con piscina, zona deportiva y parques. Ideal para familias. Colegios, centros comerciales y vías principales a distancia peatonal. Excelente valorización.',
   },
   {
-    id: 9,
+    _id: 'static-9',
     title: 'Suite Vista a la Bahía Pie de la Popa',
+    slug: 'suite-vista-a-la-bahia-pie-de-la-popa',
     price: '$4.800.000 / mes',
     priceValue: 4800000,
     location: 'Pie de la Popa, Cartagena',
@@ -141,11 +158,12 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80',
     type: 'Arriendo',
     propertyType: 'Apartamento',
-    description: 'Apartamento premium en Pie de la Popa con impresionante vista a la bahía y la ciudad amurallada. Completamente amoblado con diseño moderno tropical. Club house con piscina infinita y terraza panorámica. A pasos del Convento de la Popa. Estratégicamente ubicado.'
+    description: 'Apartamento premium en Pie de la Popa con impresionante vista a la bahía y la ciudad amurallada. Completamente amoblado con diseño moderno tropical. Club house con piscina infinita y terraza panorámica. A pasos del Convento de la Popa. Estratégicamente ubicado.',
   },
   {
-    id: 10,
+    _id: 'static-10',
     title: 'Villa Tropical Islas del Rosario',
+    slug: 'villa-tropical-islas-del-rosario',
     price: '$5.200.000.000',
     priceValue: 5200000000,
     location: 'Islas del Rosario, Cartagena',
@@ -157,6 +175,7 @@ export const properties = [
     image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80',
     type: 'Venta',
     propertyType: 'Casa',
-    description: 'Villa de lujo absoluto en las míticas Islas del Rosario, a 45 minutos en lancha de Cartagena. Aguas cristalinas, arrecife de coral, piscina de borde infinito y muelle privado. Sistema de energía solar y captación de agua. Una inversión sin igual en el Caribe colombiano.'
-  }
+    description: 'Villa de lujo absoluto en las míticas Islas del Rosario, a 45 minutos en lancha de Cartagena. Aguas cristalinas, arrecife de coral, piscina de borde infinito y muelle privado. Sistema de energía solar y captación de agua. Una inversión sin igual en el Caribe colombiano.',
+    featured: true,
+  },
 ]

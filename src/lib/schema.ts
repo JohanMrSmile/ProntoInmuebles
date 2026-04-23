@@ -1,7 +1,8 @@
 import { siteConfig } from '@/lib/config'
 
 type PropertySchemaInput = {
-  id: number | string
+  _id?: string
+  slug?: string
   title: string
   description: string
   image: string
@@ -66,7 +67,7 @@ export function getPropertySchema(property: PropertySchemaInput) {
   return {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
-    '@id': `${siteConfig.url}/propiedades/${property.id}#property`,
+    '@id': `${siteConfig.url}/propiedades/${property.slug || property._id}#property`,
     name: property.title,
     description: property.description,
     image: [property.image],
@@ -93,7 +94,7 @@ export function getPropertySchema(property: PropertySchemaInput) {
       seller: {
         '@id': `${siteConfig.url}#organization`,
       },
-      url: `${siteConfig.url}/propiedades/${property.id}`,
+      url: `${siteConfig.url}/propiedades/${property.slug || property._id}`,
     },
     additionalProperty: [
       {

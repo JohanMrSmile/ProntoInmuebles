@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next'
-import { properties } from '@/lib/properties'
+import { getProperties } from '@/lib/sanity'
+import { properties as staticProperties } from '@/lib/properties'
 import { siteConfig } from '@/lib/config'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url
 
   // Static routes
@@ -17,15 +18,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/terminos'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: '2026-04-22',
+    lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: route === '' ? 1 : 0.8,
   }))
 
-  // Dynamic routes (Properties)
+  // Dynamic routes (Properties) — Sanity first, then fallback
+  let properties = await getProperties()
+  if (!properties || properties.length === 0) {
+    properties = staticProperties
+  }
+
   const propertyRoutes = properties.map((property) => ({
-    url: `${baseUrl}/propiedades/${property.id}`,
-    lastModified: '2026-04-22',
+    url: `${baseUrl}/propiedades/${property.slug}`,
+    lastModified: new Date(),
     changeFrequency: 'daily' as const,
     priority: 0.9,
   }))
