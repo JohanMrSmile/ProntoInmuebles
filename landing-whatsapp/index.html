@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#123E50" />
+
+  <title>Propiedades en Cartagena | Asesoría inmediata por WhatsApp</title>
+  <meta name="description" content="Compra o arrienda en Cartagena con asesoría inmediata. Te enviamos opciones reales en minutos por WhatsApp. Últimas unidades disponibles." />
+
+  <meta property="og:title" content="Propiedades en Cartagena | Asesoría inmediata por WhatsApp" />
+  <meta property="og:description" content="Opciones reales, asesoría rápida y acompañamiento completo. Escríbenos por WhatsApp." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_CO" />
+
+  <link rel="preconnect" href="https://wa.me" crossorigin>
+
+  <link rel="preload" as="image" href="assets/hero-cartagena.webp" imagesrcset="assets/hero-cartagena.avif 1x, assets/hero-cartagena.webp 1x" imagesizes="100vw" fetchpriority="high" />
+
+  <style>
+    :root{
+      --bg:#0b2530;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --brand:#2FA3C5;
+      --brand2:#20B85E;
+      --gold:#C9A25A;
+      --ring:rgba(47,163,197,.25);
+      --shadow:0 18px 50px -18px rgba(15,23,42,.35);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans";color:var(--text);background:#f6fbfd;line-height:1.35}
+    a{color:inherit}
+
+    .container{max-width:1120px;margin:0 auto;padding:0 16px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:14px 18px;border-radius:999px;border:1px solid transparent;font-weight:800;text-decoration:none;letter-spacing:.2px;white-space:nowrap}
+    .btn-primary{background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;box-shadow:0 12px 30px -18px rgba(32,184,94,.65)}
+    .btn-primary:focus{outline:3px solid var(--ring);outline-offset:3px}
+    .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.18)}
+
+    .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14)}
+
+    header{position:sticky;top:0;z-index:10;background:rgba(246,251,253,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
+    .nav{display:flex;align-items:center;justify-content:space-between;min-height:64px;gap:12px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.02em}
+    .logo-mark{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--gold));box-shadow:0 14px 34px -24px rgba(47,163,197,.65)}
+    .nav a{font-weight:800;text-decoration:none;color:rgba(15,23,42,.78)}
+
+    .hero{position:relative;overflow:hidden;background:radial-gradient(800px 400px at 75% 15%,rgba(47,163,197,.22),transparent 60%),radial-gradient(700px 380px at 12% 82%,rgba(32,184,94,.18),transparent 55%),linear-gradient(180deg,#0b2530 0%, #0d2a36 55%, #0b2530 100%);color:#fff}
+    .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,162,90,.18),transparent 38%);pointer-events:none}
+    .hero-inner{padding:34px 0 26px}
+    .hero-grid{display:grid;gap:18px}
+
+    .hero h1{margin:14px 0 10px;font-size:clamp(30px,5.6vw,56px);line-height:1.03;letter-spacing:-.03em}
+    .hero p{margin:0;color:rgba(255,255,255,.86);font-size:clamp(15px,2.2vw,18px);max-width:44ch}
+
+    .hero-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+
+    .trust{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;color:rgba(255,255,255,.78);font-weight:700;font-size:13px}
+    .trust strong{color:#fff}
+
+    .hero-media{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);background:rgba(255,255,255,.06)}
+    .hero-media picture,.hero-media img{display:block;width:100%;height:auto}
+
+    main{padding:26px 0 52px}
+    section{padding:26px 0}
+    .section-title{font-size:26px;letter-spacing:-.02em;margin:0 0 8px}
+    .section-sub{margin:0 0 16px;color:var(--muted);font-weight:650}
+
+    .grid{display:grid;gap:14px}
+    @media (min-width:860px){
+      .hero-grid{grid-template-columns:1.1fr .9fr;align-items:center;gap:24px}
+      .grid-3{grid-template-columns:repeat(3,1fr)}
+      .grid-2{grid-template-columns:repeat(2,1fr)}
+      .grid-6{grid-template-columns:repeat(3,1fr)}
+    }
+
+    .card{background:var(--card);border:1px solid rgba(15,23,42,.06);border-radius:var(--radius);box-shadow:0 16px 55px -30px rgba(15,23,42,.18);overflow:hidden;content-visibility:auto;contain-intrinsic-size:360px}
+    .card-body{padding:14px 14px 16px}
+    .card h3{margin:0 0 6px;font-size:16px;letter-spacing:-.01em}
+    .price{font-weight:900;color:#0b2530}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-weight:650;font-size:13px}
+
+    .prop-media{position:relative;aspect-ratio:4/3;background:#e2f3f8}
+    .prop-media img{width:100%;height:100%;object-fit:cover}
+    .tag{position:absolute;top:10px;left:10px;background:rgba(11,37,48,.75);color:#fff;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+
+    .wa-row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    .wa-mini{flex:1 1 240px}
+
+    .social{display:grid;gap:12px}
+    .social-item{display:flex;gap:12px;align-items:flex-start}
+    .kpi{font-weight:950;color:#0b2530}
+
+    .why{display:grid;gap:12px}
+    .why-item{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:var(--radius);background:rgba(47,163,197,.06);border:1px solid rgba(47,163,197,.14);content-visibility:auto;contain-intrinsic-size:220px}
+    .icon{width:28px;height:28px;flex:0 0 28px}
+
+    .final{background:linear-gradient(180deg,rgba(47,163,197,.08),rgba(32,184,94,.06));border-top:1px solid rgba(15,23,42,.06);border-bottom:1px solid rgba(15,23,42,.06)}
+
+    footer{padding:22px 0;color:rgba(15,23,42,.72)}
+    footer small{display:block;line-height:1.5}
+
+    .sticky-wa{position:fixed;left:12px;right:12px;bottom:12px;z-index:20;display:flex;justify-content:center}
+    .sticky-wa a{width:min(520px,100%)}
+    @media (min-width:860px){.sticky-wa{display:none}}
+
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"RealEstateAgent",
+    "name":"Pronto Inmuebles",
+    "areaServed":"Cartagena, Colombia",
+    "telephone":"+57 3053132497",
+    "url":"https://example.com/",
+    "sameAs":["https://wa.me/573053132497"],
+    "address":{
+      "@type":"PostalAddress",
+      "addressLocality":"Cartagena",
+      "addressCountry":"CO"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="nav">
+        <div class="logo" aria-label="Pronto Inmuebles">
+          <div class="logo-mark" aria-hidden="true"></div>
+          <div>
+            Pronto Inmuebles<br>
+            <span style="font-size:12px;font-weight:800;color:rgba(15,23,42,.6)">Cartagena · Asesoría inmediata</span>
+          </div>
+        </div>
+        <a id="nav-wa" class="btn btn-primary" href="https://wa.me/573053132497?text=Hola%20Pronto%20Inmuebles%2C%20quiero%20opciones%20en%20Cartagena.%20%5BLanding%5D%20&utm_source=landing&utm_medium=cta&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">
+          Hablar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero" id="inicio">
+    <div class="container hero-inner">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">Últimas unidades disponibles · Respuesta rápida</div>
+          <h1>Encuentra tu propiedad ideal en Cartagena sin perder tiempo</h1>
+          <p>
+            Te enviamos opciones reales según tu presupuesto y zona (Bocagrande, Centro Histórico, El Laguito).
+            Atención inmediata por WhatsApp.
+          </p>
+
+          <div class="hero-cta">
+            <a id="hero-wa" class="btn btn-primary" href="https://wa.me/573053132497?text=Hola%2C%20quiero%20asesor%C3%ADa%20para%20comprar%20o%20arrendar%20en%20Cartagena.%20%5BHero%5D&utm_source=landing&utm_medium=hero&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">
+              Hablar ahora por WhatsApp
+            </a>
+            <a class="btn btn-ghost" href="#propiedades">Ver propiedades destacadas</a>
+          </div>
+
+          <div class="trust" aria-label="Prueba social">
+            <span><strong>+1.200</strong> clientes atendidos</span>
+            <span>•</span>
+            <span><strong>4.9★</strong> reseñas</span>
+            <span>•</span>
+            <span>Asesoría sin presión</span>
+          </div>
+        </div>
+
+        <div class="hero-media" aria-label="Vista de Cartagena">
+          <picture>
+            <source srcset="assets/hero-cartagena.avif" type="image/avif" />
+            <source srcset="assets/hero-cartagena.webp" type="image/webp" />
+            <img src="assets/hero-cartagena.jpg" width="960" height="720" alt="Propiedades en Cartagena" decoding="async" fetchpriority="high" />
+          </picture>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section id="propiedades">
+      <div class="container">
+        <h2 class="section-title">Propiedades destacadas</h2>
+        <p class="section-sub">Máximo 6 opciones visibles. Si te interesa una, te mando más similares por WhatsApp.</p>
+
+        <div class="grid grid-6">
+          <!-- Card 1 -->
+          <article class="card">
+            <div class="prop-media">
+              <span class="tag">Venta</span>
+              <picture>
+                <source srcset="assets/p1.avif" type="image/avif" />
+                <source srcset="assets/p1.webp" type="image/webp" />
+                <img src="assets/p1.jpg" width="800" height="600" alt="Apartamento Bocagrande" loading="lazy" decoding="async" />
+              </picture>
+            </div>
+            <div class="card-body">
+              <h3>Apartamento en Bocagrande</h3>
+              <div class="meta">
+                <span class="price">$ 850M</span>
+                <span>•</span>
+                <span>Bocagrande</span>
+              </div>
+              <div class="wa-row">
+                <a class="btn btn-primary wa-mini" href="https://wa.me/573053132497?text=Hola%2C%20me%20interesa%20el%20Apartamento%20en%20Bocagrande%20%28%24850M%29.%20%5BPropiedad%201%5D&utm_source=landing&utm_medium=card&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="card">
+            <div class="prop-media">
+              <span class="tag">Arriendo</span>
+              <picture>
+                <source srcset="assets/p2.avif" type="image/avif" />
+                <source srcset="assets/p2.webp" type="image/webp" />
+                <img src="assets/p2.jpg" width="800" height="600" alt="Apartaestudio El Laguito" loading="lazy" decoding="async" />
+              </picture>
+            </div>
+            <div class="card-body">
+              <h3>Apartaestudio en El Laguito</h3>
+              <div class="meta">
+                <span class="price">$ 3.8M / mes</span>
+                <span>•</span>
+                <span>El Laguito</span>
+              </div>
+              <div class="wa-row">
+                <a class="btn btn-primary wa-mini" href="https://wa.me/573053132497?text=Hola%2C%20me%20interesa%20el%20Apartaestudio%20en%20El%20Laguito%20%28%243.8M%2Fmes%29.%20%5BPropiedad%202%5D&utm_source=landing&utm_medium=card&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">Quiero detalles</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="card">
+            <div class="prop-media">
+              <span class="tag">Venta</span>
+              <picture>
+                <source srcset="assets/p3.avif" type="image/avif" />
+                <source srcset="assets/p3.webp" type="image/webp" />
+                <img src="assets/p3.jpg" width="800" height="600" alt="Casa Centro Histórico" loading="lazy" decoding="async" />
+              </picture>
+            </div>
+            <div class="card-body">
+              <h3>Casa en Centro Histórico</h3>
+              <div class="meta">
+                <span class="price">$ 1.650M</span>
+                <span>•</span>
+                <span>Centro</span>
+              </div>
+              <div class="wa-row">
+                <a class="btn btn-primary wa-mini" href="https://wa.me/573053132497?text=Hola%2C%20me%20interesa%20la%20Casa%20en%20Centro%20Hist%C3%B3rico%20%28%241.650M%29.%20%5BPropiedad%203%5D&utm_source=landing&utm_medium=card&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">Enviar opciones similares</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="card">
+            <div class="prop-media">
+              <span class="tag">Arriendo</span>
+              <picture>
+                <source srcset="assets/p4.avif" type="image/avif" />
+                <source srcset="assets/p4.webp" type="image/webp" />
+                <img src="assets/p4.jpg" width="800" height="600" alt="Apartamento Manga" loading="lazy" decoding="async" />
+              </picture>
+            </div>
+            <div class="card-body">
+              <h3>Apartamento en Manga</h3>
+              <div class="meta">
+                <span class="price">$ 4.6M / mes</span>
+                <span>•</span>
+                <span>Manga</span>
+              </div>
+              <div class="wa-row">
+                <a class="btn btn-primary wa-mini" href="https://wa.me/573053132497?text=Hola%2C%20me%20interesa%20el%20Apartamento%20en%20Manga%20%28%244.6M%2Fmes%29.%20%5BPropiedad%204%5D&utm_source=landing&utm_medium=card&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">Consultar disponibilidad</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="card">
+            <div class="prop-media">
+              <span class="tag">Venta</span>
+              <picture>
+                <source srcset="assets/p5.avif" type="image/avif" />
+                <source srcset="assets/p5.webp" type="image/webp" />
+                <img src="assets/p5.jpg" width="800" height="600" alt="Penthouse Vista al Mar" loading="lazy" decoding="async" />
+              </picture>
+            </div>
+            <div class="card-body">
+              <h3>Penthouse Vista al Mar</h3>
+              <div class="meta">
+                <span class="price">$ 2.150M</span>
+                <span>•</span>
+                <span>Bocagrande</span>
+              </div>
+              <div class="wa-row">
+                <a class="btn btn-primary wa-mini" href="https://wa.me/573053132497?text=Hola%2C%20me%20interesa%20el%20Penthouse%20Vista%20al%20Mar%20%28%242.150M%29.%20%5BPropiedad%205%5D&utm_source=landing&utm_medium=card&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">Agendar visita</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="card">
+            <div class="prop-media">
+              <span class="tag">Arriendo</span>
+              <picture>
+                <source srcset="assets/p6.avif" type="image/avif" />
+                <source srcset="assets/p6.webp" type="image/webp" />
+                <img src="assets/p6.jpg" width="800" height="600" alt="Oficina Centro" loading="lazy" decoding="async" />
+              </picture>
+            </div>
+            <div class="card-body">
+              <h3>Oficina en Centro</h3>
+              <div class="meta">
+                <span class="price">$ 3.2M / mes</span>
+                <span>•</span>
+                <span>Centro</span>
+              </div>
+              <div class="wa-row">
+                <a class="btn btn-primary wa-mini" href="https://wa.me/573053132497?text=Hola%2C%20me%20interesa%20la%20Oficina%20en%20Centro%20%28%243.2M%2Fmes%29.%20%5BPropiedad%206%5D&utm_source=landing&utm_medium=card&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">Recibir opciones</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <a id="more-wa" class="btn btn-primary" href="https://wa.me/573053132497?text=Hola%2C%20quiero%20ver%20m%C3%A1s%20propiedades%20disponibles%20en%20Cartagena.%20%5BVer%20m%C3%A1s%5D&utm_source=landing&utm_medium=cta&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">
+            Ver más propiedades por WhatsApp
+          </a>
+          <a class="btn" style="border-color:rgba(15,23,42,.12);background:#fff" href="#cta">Quiero que me asesoren</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="prueba-social">
+      <div class="container">
+        <h2 class="section-title">Prueba social que genera confianza</h2>
+        <p class="section-sub">Mensajes cortos, directos y creíbles. Sin carruseles, sin ruido.</p>
+
+        <div class="social grid grid-3">
+          <div class="card"><div class="card-body">
+            <div class="kpi">+50 familias felices</div>
+            <div class="meta" style="margin-top:6px">“Nos mandaron opciones reales y cerramos en 10 días.”</div>
+          </div></div>
+          <div class="card"><div class="card-body">
+            <div class="kpi">Respuesta rápida</div>
+            <div class="meta" style="margin-top:6px">“Por WhatsApp me aclararon todo y me acompañaron en el proceso.”</div>
+          </div></div>
+          <div class="card"><div class="card-body">
+            <div class="kpi">Acompañamiento completo</div>
+            <div class="meta" style="margin-top:6px">“Desde la visita hasta la firma. Sin estrés.”</div>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="por-que" class="final">
+      <div class="container">
+        <h2 class="section-title">¿Por qué Pronto Inmuebles?</h2>
+        <p class="section-sub">3 razones que impactan conversión (beneficios, no discurso).</p>
+
+        <div class="why grid grid-3">
+          <div class="why-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 2l9 7v11a2 2 0 0 1-2 2h-5v-7H10v7H5a2 2 0 0 1-2-2V9l9-7z" stroke="#2FA3C5" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <div>
+              <strong>Opciones reales</strong><br>
+              <span style="color:var(--muted);font-weight:650">Te envío propiedades que sí están disponibles y encajan con tu necesidad.</span>
+            </div>
+          </div>
+
+          <div class="why-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="#20B85E" stroke-width="2"/>
+              <path d="M12 6v6l4 2" stroke="#20B85E" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <strong>Atención inmediata</strong><br>
+              <span style="color:var(--muted);font-weight:650">WhatsApp directo. Sin formularios largos ni esperas.</span>
+            </div>
+          </div>
+
+          <div class="why-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" stroke="#C9A25A" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M9 12l2 2 4-5" stroke="#C9A25A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div>
+              <strong>Asesoría sin presión</strong><br>
+              <span style="color:var(--muted);font-weight:650">Te guío con claridad (compra/arriendo), sin empujarte a decidir.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cta">
+      <div class="container">
+        <h2 class="section-title">¿Listo para recibir opciones hoy?</h2>
+        <p class="section-sub">Escríbeme y te mando propiedades por zona y presupuesto. <strong>Cartagena</strong>.</p>
+
+        <div class="card">
+          <div class="card-body" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-weight:950;font-size:18px">WhatsApp: <span style="color:#0b2530">+57 305 313 2497</span></div>
+              <div style="color:var(--muted);font-weight:650;margin-top:6px">Cupón de prioridad: <span style="font-weight:900">“CARTAGENA”</span> (menciona esto y te atiendo primero)</div>
+            </div>
+            <a id="final-wa" class="btn btn-primary" href="https://wa.me/573053132497?text=Hola%2C%20quiero%20opciones%20en%20Cartagena%20y%20voy%20con%20prioridad%20%28CARTAGENA%29.%20%5BCTA%20Final%5D&utm_source=landing&utm_medium=final&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">
+              Hablar ahora por WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <small><strong>Pronto Inmuebles</strong> · Cartagena, Colombia</small>
+      <small>Contacto: <a href="tel:+573053132497">+57 305 313 2497</a> · <a href="https://wa.me/573053132497" target="_blank" rel="noopener noreferrer">WhatsApp</a></small>
+      <small style="margin-top:8px">© <span id="y"></span> · Landing optimizada para velocidad y conversión.</small>
+    </div>
+  </footer>
+
+  <div class="sticky-wa" aria-label="Botón fijo WhatsApp">
+    <a id="sticky-wa" class="btn btn-primary" href="https://wa.me/573053132497?text=Hola%2C%20quiero%20opciones%20en%20Cartagena.%20%5BSticky%5D&utm_source=landing&utm_medium=sticky&utm_campaign=cartagena" target="_blank" rel="noopener noreferrer">
+      Hablar por WhatsApp
+    </a>
+  </div>
+
+  <script>
+    (function(){
+      var y=document.getElementById('y');
+      if(y) y.textContent=String(new Date().getFullYear());
+
+      function track(label){
+        try{
+          if(!('sendBeacon' in navigator)) return;
+          var payload=JSON.stringify({event:'whatsapp_click',label:label,ts:Date.now(),path:location.pathname});
+          navigator.sendBeacon('/wa-track', payload);
+        }catch(e){}
+      }
+
+      var ids=['nav-wa','hero-wa','more-wa','final-wa','sticky-wa'];
+      for(var i=0;i<ids.length;i++){
+        var el=document.getElementById(ids[i]);
+        if(!el) continue;
+        el.addEventListener('click', (function(id){return function(){track(id);};})(ids[i]), {passive:true});
+      }
+    })();
+  </script>
+</body>
+</html>

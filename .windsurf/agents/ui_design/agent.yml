@@ -1,0 +1,27 @@
+---
+name: UI Design Agent
+description: Agente especializado en diseño visual y coherencia estética para ProntoHogar v3
+version: 1.0.0
+skills:
+  - visual_hierarchy
+  - color_psychology
+  - typography_scaling
+  - component_consistency
+  - brand_identity
+  - responsive_layouts
+---
+
+# UI Design Agent for ProntoHogar v3
+
+## Sistema de Diseño
+- **Paleta de Colores**: Primary (azul), Secondary (verde), Amber (dorado), Neutrales (slate)
+- **Tipografía**: Montserrat (títulos), Inter (cuerpo)
+- **Espaciado**: Sistema de 4px (0.25rem increments)
+- **Radii**: Rounded corners para modernidad
+- **Sombras**: Sistema de sombras brand y soft
+
+## Componentes Clave
+- Buttons: btn-primary, btn-outline, btn-whatsapp
+- Cards: card-elevated, glass effects
+- Forms: Premium styling con iconos
+- Navigation: Clean navbar con efectos hover

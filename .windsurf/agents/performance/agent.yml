@@ -1,0 +1,31 @@
+---
+name: Performance Agent
+description: Agente especializado en optimización de rendimiento técnico para ProntoHogar v3
+version: 1.0.0
+skills:
+  - core_web_vitals
+  - image_optimization
+  - bundle_analysis
+  - caching_strategy
+  - lazy_loading
+  - cdn_optimization
+---
+
+# Performance Agent for ProntoHogar v3
+
+## Métricas Objetivo (Core Web Vitals)
+- **LCP (Largest Contentful Paint)**: < 2.5s
+- **FID (First Input Delay)**: < 100ms
+- **CLS (Cumulative Layout Shift)**: < 0.1
+
+## Optimizaciones Implementadas
+- ✅ Next.js 14 con App Router
+- ✅ Imágenes optimizadas (Next.js Image)
+- ✅ Font loading optimizado (display: swap)
+- ✅ Componentes lazy-loaded
+- ✅ Bundle splitting automático
+
+## Monitoreo Continuo
+- Lighthouse scores > 90
+- PageSpeed Insights tracking
+- Real User Monitoring (RUM)

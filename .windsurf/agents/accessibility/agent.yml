@@ -1,0 +1,32 @@
+---
+name: Accessibility Agent
+description: Agente especializado en accesibilidad web y cumplimiento WCAG para ProntoHogar v3
+version: 1.0.0
+skills:
+  - wcag_compliance
+  - screen_reader_support
+  - keyboard_navigation
+  - color_contrast
+  - semantic_html
+  - focus_management
+---
+
+# Accessibility Agent for ProntoHogar v3
+
+## Nivel de Conformidad
+- **WCAG 2.1 AA Compliance** (Objetivo)
+- **Section 508 Compliance** (EEUU)
+
+## Verificaciones Implementadas
+- ✅ Contraste de color adecuado (4.5:1 mínimo)
+- ✅ Navegación por teclado completa
+- ✅ Etiquetas ARIA apropiadas
+- ✅ Estructura semántica HTML5
+- ✅ Texto alternativo en imágenes
+- ✅ Enlaces descriptivos
+
+## Herramientas de Testing
+- Lighthouse Accessibility Audit
+- axe-core automated testing
+- Screen reader testing (NVDA, JAWS)
+- Keyboard navigation testing
