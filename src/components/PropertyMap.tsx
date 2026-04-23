@@ -157,12 +157,17 @@ export default function PropertyMap({
     const bounds: [number, number][] = []
 
     properties.forEach(property => {
-      if (!property.lat || !property.lng) return
+      const lat = Number(property.lat)
+      const lng = Number(property.lng)
+      
+      // Skip if coordinates are invalid, NaN, or exactly 0,0 (default/empty)
+      if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return
+      
       propertiesByIdRef.current.set(property._id, property)
-      bounds.push([property.lat, property.lng])
+      bounds.push([lat, lng])
 
       const icon = property.type === 'Venta' ? icons.green : icons.blue
-      const marker = L.marker([property.lat, property.lng], { 
+      const marker = L.marker([lat, lng], { 
         icon,
         riseOnHover: true,
       }).addTo(map)
@@ -214,7 +219,11 @@ export default function PropertyMap({
     })
 
     if (bounds.length > 0) {
-      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 })
+      // setTimeout is required to fix the Leaflet grey-tile bug when container sizes change dynamically
+      setTimeout(() => {
+        map.invalidateSize()
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 })
+      }, 100)
     }
   }, [properties, ready, createIcons, onMarkerClick, onMarkerHover])
 
