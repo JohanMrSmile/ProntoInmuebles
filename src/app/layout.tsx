@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import AutoTracker from '@/components/AutoTracker'
+import FrontendWrapper from '@/components/FrontendWrapper'
 import { getOrganizationSchema, getWebsiteSchema } from '@/lib/schema'
 
 const montserrat = Montserrat({
@@ -138,12 +139,9 @@ export default function RootLayout({
         {/* Auto Tracker — UTM capture + page_view + scroll_depth + time_on_site */}
         <AutoTracker />
 
-        <Navbar />
-        <main id="main-content" className="min-h-screen">
+        <FrontendWrapper>
           {children}
-        </main>
-        <Footer />
-        <WhatsAppButton />
+        </FrontendWrapper>
       </body>
     </html>
   )

@@ -13,12 +13,40 @@ import {apiVersion, dataset, projectId} from './src/sanity/env'
 import {schema} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
 
+import {DashboardTool} from './src/sanity/tools/DashboardTool'
+
 export default defineConfig({
   basePath: '/studio',
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
+  tools: (prev) => [
+    {
+      name: 'dashboard',
+      title: '📊 Overview',
+      component: DashboardTool,
+    },
+    ...prev,
+  ],
+  document: {
+    actions: (prev) => {
+      return prev.map((originalAction) => {
+        if (originalAction.action === 'publish') {
+          return (props) => {
+            const originalResult = originalAction(props)
+            if (!originalResult) return null
+            return {
+              ...originalResult,
+              tone: 'positive',
+              label: '🚀 PUBLICAR INMUEBLE',
+            }
+          }
+        }
+        return originalAction
+      })
+    }
+  },
   plugins: [
     structureTool({structure}),
     // Vision is for querying with GROQ from inside the Studio

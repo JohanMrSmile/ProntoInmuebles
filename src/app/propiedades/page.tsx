@@ -3,6 +3,9 @@ import PropiedadesContent from '@/components/PropiedadesContent'
 import { getProperties } from '@/lib/sanity'
 import { properties as staticProperties } from '@/lib/properties'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export const metadata: Metadata = {
   title: 'Catálogo de Propiedades | Pronto Inmuebles',
   description: 'Explora nuestro catálogo exclusivo de casas, apartamentos y locales en venta y arriendo. Encuentra tu espacio ideal con asesoría profesional.',

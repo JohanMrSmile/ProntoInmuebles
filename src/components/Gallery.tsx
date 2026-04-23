@@ -12,20 +12,26 @@ type Project = typeof PROJECTS[0]
 
 const CATEGORIES = ['Todos', 'Apartamentos', 'Casas', 'Oficinas', 'Remodelaciones']
 
-const PROJECTS = [
+const FALLBACK_PROJECTS = [
   { id: 1, title: 'Penthouse Bocagrande',          category: 'Apartamentos',   location: 'Bocagrande, Cartagena',       image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80', wide: true  },
   { id: 2, title: 'Casa Colonial Centro Histórico', category: 'Casas',          location: 'Centro Histórico, Cartagena', image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800&q=80', wide: false },
-  { id: 3, title: 'Oficinas Manga Business Center', category: 'Oficinas',       location: 'Manga, Cartagena',            image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80', wide: false },
-  { id: 4, title: 'Remodelación Getsemaní',         category: 'Remodelaciones', location: 'Getsemaní, Cartagena',        image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80', wide: false },
-  { id: 5, title: 'Apto Frente al Mar El Laguito',  category: 'Apartamentos',   location: 'El Laguito, Cartagena',       image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80', wide: true  },
-  { id: 6, title: 'Casa Familiar Crespo',           category: 'Casas',          location: 'Crespo, Cartagena',           image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80', wide: false },
 ]
 
-export default function Gallery() {
+export default function Gallery({ initialProperties = [] }: { initialProperties?: any[] }) {
   const [active,   setActive]   = useState('Todos')
   const [lightbox, setLightbox] = useState<any | null>(null)
 
-  const projects = PROJECTS
+  const projects = initialProperties.length > 0 
+    ? initialProperties.map((p, index) => ({
+        id: p._id,
+        title: p.title,
+        category: p.propertyType || 'Apartamentos',
+        location: p.address || 'Cartagena',
+        image: p.imageUrl || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+        wide: index === 0 || index === 4 // Hacer wide al primero y quinto para el masonry layout
+      }))
+    : FALLBACK_PROJECTS
+
   const filtered = active === 'Todos' ? projects : projects.filter(p => p.category === active)
 
   // Close lightbox with Escape key

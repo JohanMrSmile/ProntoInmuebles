@@ -8,26 +8,35 @@ import { getWhatsAppLink } from '@/lib/config'
 import { trackWhatsAppLead } from '@/lib/analytics'
 import { getUTMSummary } from '@/lib/utm'
 
-const TESTIMONIALS = [
-  { name: 'María Fernanda López', role: 'Compradora · Bocagrande, Cartagena',    rating: 5, text: 'Increíble experiencia. El equipo de Pronto Inmuebles nos acompañó en cada paso y encontramos el apartamento perfecto frente al mar en menos de 3 semanas. Su conocimiento del mercado cartagenero es impresionante.', photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&fit=crop&crop=faces' },
-  { name: 'Carlos Andrés Mejía',  role: 'Propietario · Manga, Cartagena',       rating: 5, text: 'Vendí mi propiedad al mejor precio del mercado gracias a la estrategia de marketing y la red de compradores que manejan. Profesionales de primera, sin duda volvería a trabajar con ellos.', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80&fit=crop&crop=faces' },
-  { name: 'Diana Marcela Torres', role: 'Arrendataria · El Laguito, Cartagena', rating: 5, text: 'El proceso de arriendo fue súper transparente. Me explicaron todo, gestionaron el contrato y el apartamento con vista al mar superó todas mis expectativas. Responden súper rápido por WhatsApp.', photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80&fit=crop&crop=faces' },
-  { name: 'Juan Pablo Vargas',    role: 'Empresa · Centro Histórico, Cartagena', rating: 5, text: 'Buscábamos una oficina en el casco histórico y en tiempo récord Pronto encontró la ubicación ideal para nuestra empresa. El seguimiento post-firma también fue excelente.', photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80&fit=crop&crop=faces' },
+const FALLBACK_TESTIMONIALS = [
+  { name: 'María Fernanda López', role: 'Compradora · Bocagrande',    rating: 5, text: 'Increíble experiencia. El equipo nos acompañó en cada paso y encontramos el apartamento perfecto.', photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&fit=crop&crop=faces' },
+  { name: 'Carlos Andrés Mejía',  role: 'Propietario · Manga',       rating: 5, text: 'Vendí mi propiedad al mejor precio gracias a su red de compradores. Profesionales de primera.', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80&fit=crop&crop=faces' },
 ]
 
-export default function Testimonials() {
+export default function Testimonials({ initialReviews = [] }: { initialReviews?: any[] }) {
   const [current, setCurrent] = useState(0)
   const [autoplay, setAutoplay] = useState(true)
 
+  // Mapeamos los datos de Sanity o usamos los de prueba si no hay nada en la base de datos
+  const testimonialsData = initialReviews.length > 0 
+    ? initialReviews.map(r => ({
+        name: r.author,
+        role: 'Cliente Satisfecho',
+        rating: r.rating || 5,
+        text: r.text,
+        photo: r.imageUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&fit=crop&crop=faces' // Placeholder genérico si no suben foto
+      }))
+    : FALLBACK_TESTIMONIALS
+
   useEffect(() => {
     if (!autoplay) return
-    const id = setInterval(() => setCurrent(c => (c + 1) % TESTIMONIALS.length), 5000)
+    const id = setInterval(() => setCurrent(c => (c + 1) % testimonialsData.length), 5000)
     return () => clearInterval(id)
-  }, [autoplay])
+  }, [autoplay, testimonialsData.length])
 
-  const prev = () => { setAutoplay(false); setCurrent(c => (c - 1 + TESTIMONIALS.length) % TESTIMONIALS.length) }
-  const next = () => { setAutoplay(false); setCurrent(c => (c + 1) % TESTIMONIALS.length) }
-  const t = TESTIMONIALS[current]
+  const prev = () => { setAutoplay(false); setCurrent(c => (c - 1 + testimonialsData.length) % testimonialsData.length) }
+  const next = () => { setAutoplay(false); setCurrent(c => (c + 1) % testimonialsData.length) }
+  const t = testimonialsData[current]
 
   return (
     <section className="section relative overflow-hidden bg-charcoal-900" id="testimonios">
@@ -102,7 +111,7 @@ export default function Testimonials() {
             </button>
 
             <div className="flex gap-2 items-center">
-              {TESTIMONIALS.map((_, i) => (
+              {testimonialsData.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => { setAutoplay(false); setCurrent(i) }}
