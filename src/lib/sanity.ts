@@ -62,7 +62,7 @@ export async function getProperties(): Promise<Property[]> {
 
   try {
     const data = await client.fetch(query, {}, {
-      next: { revalidate: process.env.NODE_ENV === 'development' ? 0 : 3600 }
+      next: { revalidate: 0 } // Cache desactivado para actualizaciones inmediatas
     })
     return data || []
   } catch (error) {
@@ -81,7 +81,7 @@ export async function getPropertyBySlug(slug: string): Promise<Property | null> 
 
   try {
     const data = await client.fetch(query, { slug }, {
-      next: { revalidate: process.env.NODE_ENV === 'development' ? 0 : 3600 }
+      next: { revalidate: 0 } // Cache desactivado para actualizaciones inmediatas
     })
     return data || null
   } catch (error) {
@@ -98,7 +98,7 @@ export async function getAllPropertySlugs(): Promise<string[]> {
 
   try {
     const slugs = await client.fetch(query, {}, {
-      next: { revalidate: 3600 }
+      next: { revalidate: 0 }
     })
     return slugs || []
   } catch (error) {
