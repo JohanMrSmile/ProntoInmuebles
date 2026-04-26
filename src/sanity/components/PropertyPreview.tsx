@@ -1,7 +1,11 @@
 import { Flex, Box, Stack, Text, Badge } from '@sanity/ui'
+import { ReactElement, ReactNode } from 'react'
 import type { PreviewProps } from 'sanity'
 
 interface CustomPreviewProps extends PreviewProps {
+  title?: ReactNode | null
+  subtitle?: ReactNode | null
+  media?: ReactElement | null
   price?: string
   transactionType?: string
   propertyType?: string

@@ -8,8 +8,6 @@ import { getWhatsAppLink } from '@/lib/config'
 import { trackWhatsAppLead } from '@/lib/analytics'
 import { getUTMSummary } from '@/lib/utm'
 
-type Project = typeof PROJECTS[0]
-
 const CATEGORIES = ['Todos', 'Apartamentos', 'Casas', 'Oficinas', 'Remodelaciones']
 
 const FALLBACK_PROJECTS = [

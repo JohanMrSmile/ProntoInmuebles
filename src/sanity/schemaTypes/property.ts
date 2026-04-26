@@ -171,9 +171,6 @@ export default defineType({
     },
     prepare(selection) {
       return selection
-    },
-    components: {
-      preview: PropertyPreview as any
     }
   },
 })
