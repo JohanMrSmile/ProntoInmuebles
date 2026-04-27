@@ -1,10 +1,6 @@
 import type { Metadata } from 'next'
 import PropiedadesContent from '@/components/PropiedadesContent'
 import { getProperties } from '@/lib/sanity'
-import { properties as staticProperties } from '@/lib/properties'
-
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 export const metadata: Metadata = {
   title: 'Catálogo de Propiedades | Pronto Inmuebles',
@@ -12,12 +8,7 @@ export const metadata: Metadata = {
 }
 
 export default async function PropiedadesPage() {
-  const sanityProperties = await getProperties() || []
-  const sanitySlugs = new Set(sanityProperties.map(p => p.slug))
-  const filteredStatic = staticProperties.filter(p => !sanitySlugs.has(p.slug))
-  
-  // Combine both so the user doesn't lose the examples
-  const properties = [...sanityProperties, ...filteredStatic]
+  const properties = await getProperties() ?? []
 
   return <PropiedadesContent properties={properties} />
 }

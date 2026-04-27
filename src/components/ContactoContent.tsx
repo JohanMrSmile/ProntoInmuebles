@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Phone, Mail, MapPin, Send, CheckCircle2, Shield, MessageCircle } from 'lucide-react'
-import { getWhatsAppLink, siteConfig } from '@/lib/config'
+import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 const CONTACT_ITEMS = [
   {
@@ -57,7 +59,17 @@ export default function ContactoContent() {
       .filter(Boolean)
       .join('\n')
 
-    window.open(getWhatsAppLink(whatsappMessage), '_blank')
+    trackWhatsAppClick({
+      context: 'lead_capture',
+      location: 'cta_section',
+      label: 'Form Submit',
+      metadata: { origen: 'contacto_page' }
+    })
+    window.open(buildWhatsAppLink({
+      message: whatsappMessage,
+      context: 'lead_capture',
+      metadata: { origen: 'contacto_page' }
+    }), '_blank')
     setIsSubmitting(false)
     setIsSuccess(true)
     setTimeout(() => setIsSuccess(false), 5000)
@@ -132,9 +144,20 @@ export default function ContactoContent() {
 
             {/* WhatsApp shortcut */}
             <a
-              href={getWhatsAppLink('Hola, quiero una asesoría personalizada')}
+              href={buildWhatsAppLink({
+                message: 'Hola, quiero una asesoría personalizada',
+                context: 'lead_capture',
+                metadata: { origen: 'contacto_card' }
+              })}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                trackWhatsAppClick({
+                  context: 'lead_capture',
+                  location: 'cta_section',
+                  label: 'WhatsApp shortcut'
+                })
+              }
               className="btn-whatsapp py-4 text-sm"
             >
               <MessageCircle className="w-5 h-5" />

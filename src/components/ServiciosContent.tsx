@@ -1,9 +1,11 @@
 'use client'
 
-import { Shield, Sparkles, Droplets, PenTool, CheckCircle2, type LucideIcon } from 'lucide-react'
+import { Shield, Sparkles, Droplets, PenTool, CheckCircle2, type LucideIcon, MessageCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 interface Service {
   id: string
@@ -180,12 +182,27 @@ export default function ServiciosContent() {
                   </div>
 
                   <div className="pt-10 border-t border-neutral-100 flex flex-col sm:flex-row items-center gap-8">
-                    <Link
-                      href={`/contacto?servicio=${service.id}`}
-                      className="w-full sm:w-auto px-10 py-5 bg-primary-800 hover:bg-primary-700 text-white rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-brand active:scale-95 text-center"
+                    <a
+                      href={buildWhatsAppLink({
+                        message: `Hola, estoy interesado en ${service.title}`,
+                        context: 'service',
+                        metadata: { servicio: service.title }
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() =>
+                        trackWhatsAppClick({
+                          context: 'service',
+                          location: 'services_card',
+                          label: service.title,
+                          metadata: { servicio: service.title }
+                        })
+                      }
+                      className="w-full sm:w-auto px-10 py-5 bg-primary-800 hover:bg-primary-700 text-white rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-brand active:scale-95 text-center inline-flex items-center justify-center gap-2"
                     >
+                      <MessageCircle className="w-4 h-4" />
                       Solicitar Consultoría Técnica
-                    </Link>
+                    </a>
                     <div className="hidden sm:block">
                        <div className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Tiempo de Respuesta</div>
                        <div className="text-slate-900 font-display font-medium text-sm italic underline transition-all decoration-primary-200 decoration-2">&lt; 2 Horas Laborales</div>
@@ -217,12 +234,26 @@ export default function ServiciosContent() {
               Agenda una sesión estratégica de 20 minutos con un consultor senior. Analizaremos tu propiedad y te brindaremos un plan de acción sin compromiso.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link
-                href="/contacto"
-                className="w-full sm:w-auto px-12 py-6 bg-primary-600 hover:bg-primary-500 text-white rounded-[1.5rem] font-bold text-sm uppercase tracking-widest transition-all shadow-brand hover:scale-105 active:scale-95"
+              <a
+                href={buildWhatsAppLink({
+                  message: 'Hola, quiero agendar una consulta VIP',
+                  context: 'lead_capture',
+                  metadata: { origen: 'servicios_cta_final' }
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackWhatsAppClick({
+                    context: 'lead_capture',
+                    location: 'services_card',
+                    label: 'Consulta VIP'
+                  })
+                }
+                className="w-full sm:w-auto px-12 py-6 bg-primary-600 hover:bg-primary-500 text-white rounded-[1.5rem] font-bold text-sm uppercase tracking-widest transition-all shadow-brand hover:scale-105 active:scale-95 inline-flex items-center justify-center gap-2"
               >
+                <MessageCircle className="w-5 h-5" />
                 Agendar Mi Consulta VIP
-              </Link>
+              </a>
               <div className="flex items-center gap-3 px-6 py-4 rounded-xl border border-neutral-200 text-neutral-400 text-[10px] font-bold uppercase tracking-widest">
                 <Shield className="w-4 h-4 text-secondary-500" /> Confidencial & Sin Costo
               </div>

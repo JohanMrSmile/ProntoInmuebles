@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { Star, Quote, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react'
-import { getWhatsAppLink } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import { trackWhatsAppLead } from '@/lib/analytics'
+import { trackWhatsAppClick } from '@/lib/tracking'
 import { getUTMSummary } from '@/lib/utm'
 
 const FALLBACK_TESTIMONIALS = [
@@ -146,10 +147,21 @@ export default function Testimonials({ initialReviews = [] }: { initialReviews?:
         {/* CTA after social proof */}
         <div className="flex justify-center mt-10">
           <a
-            href={getWhatsAppLink('Hola, quiero unirme a sus clientes satisfechos' + (typeof window !== 'undefined' ? getUTMSummary() : ''))}
+            href={buildWhatsAppLink({
+              message: 'Hola, quiero unirme a sus clientes satisfechos',
+              context: 'lead_capture',
+              metadata: { origen: 'testimonials' }
+            })}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackWhatsAppLead('Testimonials Section')}
+            onClick={() => {
+              trackWhatsAppLead('Testimonials Section')
+              trackWhatsAppClick({
+                context: 'lead_capture',
+                location: 'testimonials',
+                metadata: { origen: 'testimonials' }
+              })
+            }}
             className="btn-whatsapp px-8 py-3.5 text-sm"
           >
             <MessageCircle className="w-4 h-4" />

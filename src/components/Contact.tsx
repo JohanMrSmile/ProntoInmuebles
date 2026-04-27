@@ -6,9 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion } from 'framer-motion'
 import { Send, CheckCircle2, Loader2, Phone, Mail, MapPin, MessageCircle, Zap, Shield, Sparkles, Clock, Home } from 'lucide-react'
-import { getWhatsAppLink, siteConfig } from '@/lib/config'
+import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import { trackFormSubmit, trackPhoneClick, trackWhatsAppLead, trackCTA } from '@/lib/analytics'
 import { track, submitLead, trackWhatsApp } from '@/lib/tracker'
+import { trackWhatsAppClick } from '@/lib/tracking'
 import { getUTMSummary } from '@/lib/utm'
 
 const schema = z.object({
@@ -39,7 +41,7 @@ const SERVICE_CARDS = [
 
 const CONTACT_ITEMS = [
   { icon: Phone,         label: 'Teléfono',  getHref: (c: typeof siteConfig.contact) => `tel:${c.phone}`,              getValue: (c: typeof siteConfig.contact) => c.phone   },
-  { icon: MessageCircle, label: 'WhatsApp',  getHref: () => getWhatsAppLink('Hola, quiero información sobre sus servicios.'), getValue: () => 'Escríbenos ahora' },
+  { icon: MessageCircle, label: 'WhatsApp',  getHref: () => buildWhatsAppLink({ message: 'Hola, quiero información sobre sus servicios.', context: 'lead_capture', metadata: { origen: 'contact_items' } }), getValue: () => 'Escríbenos ahora' },
   { icon: Mail,          label: 'Email',     getHref: (c: typeof siteConfig.contact) => `mailto:${c.email}`,           getValue: (c: typeof siteConfig.contact) => c.email   },
   { icon: MapPin,        label: 'Dirección', getHref: () => '#',                                                       getValue: (c: typeof siteConfig.contact) => c.address },
 ]
@@ -85,11 +87,21 @@ export default function Contact() {
         .filter(Boolean)
         .join('\n')
 
-      const waUrl = getWhatsAppLink(message)
+      const waUrl = buildWhatsAppLink({
+        message,
+        context: 'lead_capture',
+        metadata: { origen: 'contact_form', servicio: data.service }
+      })
 
       // 4. Track WhatsApp click (server-side)
       trackWhatsApp('Contact Form Submit')
       trackWhatsAppLead('Contact Form Submit')
+      trackWhatsAppClick({
+        context: 'lead_capture',
+        location: 'cta_section',
+        label: 'Contact Form Submit',
+        metadata: { servicio: data.service }
+      })
 
       // 5. Redirect to WhatsApp
       window.open(waUrl, '_blank', 'noopener,noreferrer')
@@ -271,10 +283,21 @@ export default function Contact() {
             className="flex flex-col gap-6 h-full"
           >
             <a
-              href={getWhatsAppLink('Hola, quiero información sobre sus servicios.')}
+              href={buildWhatsAppLink({
+                message: 'Hola, quiero información sobre sus servicios.',
+                context: 'lead_capture',
+                metadata: { origen: 'contact_side_card' }
+              })}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackWhatsAppLead('Contact Section Side Card')}
+              onClick={() => {
+                trackWhatsAppLead('Contact Section Side Card')
+                trackWhatsAppClick({
+                  context: 'lead_capture',
+                  location: 'cta_section',
+                  label: 'Side Card WhatsApp'
+                })
+              }}
               className="bg-white p-6 rounded-[1.75rem] hover:shadow-lg transition-all duration-300 group border-l-4 border-l-[#25D366]"
             >
               <div className="flex items-center gap-5">

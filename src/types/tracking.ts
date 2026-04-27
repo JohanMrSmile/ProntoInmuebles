@@ -1,0 +1,10 @@
+export type WhatsAppLocation =
+  | 'hero_cta'
+  | 'services_card'
+  | 'property_cta'
+  | 'navbar'
+  | 'footer'
+  | 'floating_button'
+  | 'testimonials'
+  | 'gallery'
+  | 'cta_section'

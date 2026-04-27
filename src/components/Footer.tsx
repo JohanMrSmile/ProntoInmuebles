@@ -3,7 +3,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { MessageCircle, Phone, MapPin, Mail, Instagram, Facebook } from 'lucide-react'
-import { getWhatsAppLink, siteConfig } from '@/lib/config'
+import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 const NAV_COLS = [
   {
@@ -80,9 +82,20 @@ export default function Footer() {
                 </a>
               ))}
               <a
-                href={getWhatsAppLink()}
+                href={buildWhatsAppLink({
+                  message: 'Hola, quiero información',
+                  context: 'lead_capture',
+                  metadata: { origen: 'footer' }
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackWhatsAppClick({
+                    context: 'lead_capture',
+                    location: 'footer',
+                    metadata: { origen: 'footer' }
+                  })
+                }
                 aria-label="WhatsApp"
                 className="w-9 h-9 rounded-card bg-white/6 hover:bg-secondary-500 border border-white/8 hover:border-secondary-400/50 flex items-center justify-center text-white/55 hover:text-white transition-all duration-200"
               >

@@ -6,8 +6,10 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Phone, MessageCircle, ChevronRight } from 'lucide-react'
-import { getWhatsAppLink, siteConfig } from '@/lib/config'
+import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import { trackPhoneClick, trackWhatsAppLead } from '@/lib/analytics'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 /* ─── Section IDs that the observer will track ─── */
 const OBSERVED_SECTIONS = ['servicios', 'beneficios', 'galeria', 'testimonios', 'cta', 'contacto']
@@ -211,10 +213,21 @@ export default function Navbar() {
                 <span className="hidden xl:inline">{siteConfig.contact.phone}</span>
               </a>
               <a
-                href={getWhatsAppLink()}
+                href={buildWhatsAppLink({
+                  message: 'Hola, quiero más información',
+                  context: 'lead_capture',
+                  metadata: { origen: 'navbar_desktop' }
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackWhatsAppLead('Navbar Desktop')}
+                onClick={() => {
+                  trackWhatsAppLead('Navbar Desktop')
+                  trackWhatsAppClick({
+                    context: 'lead_capture',
+                    location: 'navbar',
+                    metadata: { origen: 'navbar_desktop' }
+                  })
+                }}
                 className="btn-whatsapp px-4 py-2 text-sm rounded-pill"
               >
                 <MessageCircle className="w-4 h-4" />
@@ -322,14 +335,25 @@ export default function Navbar() {
                   {siteConfig.contact.phone}
                 </a>
                 <a
-                  href={getWhatsAppLink()}
+                  href={buildWhatsAppLink({
+                    message: 'Hola, quiero más información',
+                    context: 'lead_capture',
+                    metadata: { origen: 'navbar_mobile' }
+                  })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackWhatsAppLead('Navbar Mobile Drawer')}
-                  className="btn-whatsapp w-full py-3 text-sm"
+                  onClick={() => {
+                    trackWhatsAppLead('Navbar Mobile Drawer')
+                    trackWhatsAppClick({
+                      context: 'lead_capture',
+                      location: 'navbar',
+                      metadata: { origen: 'navbar_mobile' }
+                    })
+                  }}
+                  className="btn-whatsapp py-3.5 text-sm"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  Escribir por WhatsApp
+                  WhatsApp
                 </a>
               </div>
             </motion.div>

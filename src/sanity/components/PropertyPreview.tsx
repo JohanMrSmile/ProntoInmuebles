@@ -17,7 +17,7 @@ export function PropertyPreview(props: CustomPreviewProps) {
       {/* Media Thumbnail */}
       <Box style={{ width: '70px', height: '70px', borderRadius: '6px', overflow: 'hidden', flexShrink: 0, backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {media ? (
-          <div style={{ transform: 'scale(2.2)' }}>{media}</div> 
+          <div style={{ transform: 'scale(2.2)' }}>{media as React.ReactNode}</div>
         ) : (
           <Text size={1} muted>No Img</Text>
         )}
@@ -37,12 +37,12 @@ export function PropertyPreview(props: CustomPreviewProps) {
         </Flex>
         
         <Text size={2} weight="bold" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>
-          {title || 'Sin Título'}
+          {(title as string) || 'Sin Título'}
         </Text>
         
         <Flex justify="space-between" align="flex-end" wrap="wrap" gap={2}>
           <Stack space={2}>
-            <Text size={1} muted style={{ fontSize: '11px' }}>📍 {subtitle || 'Sin Ubicación'}</Text>
+            <Text size={1} muted style={{ fontSize: '11px' }}>📍 {(subtitle as string) || 'Sin Ubicación'}</Text>
             <Text size={1} muted style={{ fontSize: '11px' }}>🛌 {beds || 0} Hab • 🛀 {baths || 0} Baños</Text>
           </Stack>
           <Text size={2} weight="bold" style={{ color: '#d97706', fontSize: '13px' }}>

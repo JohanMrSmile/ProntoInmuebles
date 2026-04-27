@@ -32,6 +32,10 @@ export function MapInput(props: ObjectInputProps) {
     onChange(unset())
   }, [onChange])
 
+  // Store values in refs for useEffect access without re-triggering
+  const valuesRef = useRef({ lat, lng, hasValue, updateLocation })
+  valuesRef.current = { lat, lng, hasValue, updateLocation }
+
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return
 
@@ -42,9 +46,11 @@ export function MapInput(props: ObjectInputProps) {
       const L = (await import('leaflet')).default
       if (cancelled || !mapRef.current) return
 
+      const { lat: currentLat, lng: currentLng, hasValue: currentHasValue, updateLocation: currentUpdateLocation } = valuesRef.current
+
       const map = L.map(mapRef.current, {
-        center: [lat, lng],
-        zoom: hasValue ? 15 : 12,
+        center: [currentLat, currentLng],
+        zoom: currentHasValue ? 15 : 12,
       })
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -58,12 +64,12 @@ export function MapInput(props: ObjectInputProps) {
         iconAnchor: [12, 41],
       })
 
-      if (hasValue) {
-        markerRef.current = L.marker([lat, lng], { icon: greenIcon, draggable: true }).addTo(map)
-        
+      if (valuesRef.current.hasValue) {
+        markerRef.current = L.marker([valuesRef.current.lat, valuesRef.current.lng], { icon: greenIcon, draggable: true }).addTo(map)
+
         markerRef.current.on('dragend', (e: any) => {
           const newPos = e.target.getLatLng()
-          updateLocation(newPos.lat, newPos.lng)
+          valuesRef.current.updateLocation(newPos.lat, newPos.lng)
         })
       }
 
@@ -72,12 +78,12 @@ export function MapInput(props: ObjectInputProps) {
           markerRef.current = L.marker(e.latlng, { icon: greenIcon, draggable: true }).addTo(map)
           markerRef.current.on('dragend', (event: any) => {
             const newPos = event.target.getLatLng()
-            updateLocation(newPos.lat, newPos.lng)
+            valuesRef.current.updateLocation(newPos.lat, newPos.lng)
           })
         } else {
           markerRef.current.setLatLng(e.latlng)
         }
-        updateLocation(e.latlng.lat, e.latlng.lng)
+        valuesRef.current.updateLocation(e.latlng.lat, e.latlng.lng)
       })
 
       mapInstanceRef.current = map
@@ -93,7 +99,7 @@ export function MapInput(props: ObjectInputProps) {
         mapInstanceRef.current = null
       }
     }
-  }, []) // Empty dependency array as we bind to refs
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

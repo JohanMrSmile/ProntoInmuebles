@@ -3,8 +3,10 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { MessageCircle, Calendar, Check, Phone, ArrowRight, Sparkles, Loader2 } from 'lucide-react'
-import { getWhatsAppLink, siteConfig } from '@/lib/config'
+import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import { trackCTA, trackPhoneClick, trackWhatsAppLead, trackLeadCapture } from '@/lib/analytics'
+import { trackWhatsAppClick } from '@/lib/tracking'
 import { getUTMSummary } from '@/lib/utm'
 
 const BENEFITS = [
@@ -23,7 +25,11 @@ export default function CTA() {
   const serviceRef = useRef<HTMLSelectElement>(null)
 
   useEffect(() => {
-    setWaUrl(getWhatsAppLink('Hola, quiero agendar una asesoría gratuita'))
+    setWaUrl(buildWhatsAppLink({
+      message: 'Hola, quiero agendar una asesoría gratuita',
+      context: 'lead_capture',
+      metadata: { origen: 'cta_section' }
+    }))
   }, [])
 
   const handleQuickSubmit = () => {
@@ -56,7 +62,18 @@ export default function CTA() {
     setTimeout(() => {
       setSending(false)
       setSent(true)
-      window.open(getWhatsAppLink(message), '_blank')
+      const waLink = buildWhatsAppLink({
+        message,
+        context: 'lead_capture',
+        metadata: { origen: 'cta_form', servicio: service || 'general' }
+      })
+      trackWhatsAppClick({
+        context: 'lead_capture',
+        location: 'cta_section',
+        label: 'Quick Form Submit',
+        metadata: { origen: 'cta_form', servicio: service || 'general' }
+      })
+      window.open(waLink, '_blank')
       // Reset después de 3 segundos
       setTimeout(() => setSent(false), 3000)
     }, 600)
@@ -113,7 +130,14 @@ export default function CTA() {
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackWhatsAppLead('CTA Section')}
+                  onClick={() => {
+                    trackWhatsAppLead('CTA Section')
+                    trackWhatsAppClick({
+                      context: 'lead_capture',
+                      location: 'cta_section',
+                      label: 'Escribir por WhatsApp'
+                    })
+                  }}
                   className="btn-whatsapp px-6 py-3.5"
                 >
                   <MessageCircle className="w-4 h-4" />

@@ -3,6 +3,7 @@
 import { Calendar } from 'lucide-react'
 import { trackWhatsAppLead } from '@/lib/analytics'
 import { trackWhatsApp, submitLead } from '@/lib/tracker'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 interface WhatsAppCTAProps {
   whatsappUrl: string
@@ -20,6 +21,12 @@ export default function WhatsAppCTA({ whatsappUrl, propertyId, className = '' }:
         submitLead({ name: 'WhatsApp Lead (Property)', phone: '0000000000', service: `Propiedad ${propertyId}` })
         trackWhatsApp('Property CTA', propertyId)
         trackWhatsAppLead('Property Detail Page', propertyId)
+        trackWhatsAppClick({
+          context: 'property',
+          location: 'property_cta',
+          label: 'Consultar Disponibilidad',
+          metadata: { propertyId }
+        })
       }}
       className={`flex items-center justify-center w-full py-6 bg-secondary-500 hover:bg-secondary-600 text-white rounded-2xl font-bold text-sm uppercase tracking-widest shadow-green hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 group ${className}`}
     >

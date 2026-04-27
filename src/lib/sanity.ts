@@ -62,7 +62,7 @@ export async function getProperties(): Promise<Property[]> {
 
   try {
     const data = await client.fetch(query, {}, {
-      next: { revalidate: 0 } // Cache desactivado para actualizaciones inmediatas
+      next: { revalidate: 60 } // ISR: revalidar cada 60 segundos
     })
     return data || []
   } catch (error) {
@@ -81,7 +81,7 @@ export async function getPropertyBySlug(slug: string): Promise<Property | null> 
 
   try {
     const data = await client.fetch(query, { slug }, {
-      next: { revalidate: 0 } // Cache desactivado para actualizaciones inmediatas
+      next: { revalidate: 60 } // ISR: revalidar cada 60 segundos
     })
     return data || null
   } catch (error) {
@@ -98,7 +98,7 @@ export async function getAllPropertySlugs(): Promise<string[]> {
 
   try {
     const slugs = await client.fetch(query, {}, {
-      next: { revalidate: 0 }
+      next: { revalidate: 60 } // ISR: revalidar cada 60 segundos
     })
     return slugs || []
   } catch (error) {

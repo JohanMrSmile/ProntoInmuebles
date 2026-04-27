@@ -6,8 +6,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { MessageCircle, Search, Star, Home, Key, MapPin, ArrowRight, ChevronDown } from 'lucide-react'
-import { getWhatsAppLink } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import { trackCTA, trackSearch, trackWhatsAppLead } from '@/lib/analytics'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 const STATS = [
   { value: '500+', label: 'Propiedades' },
@@ -44,7 +45,10 @@ export default function Hero() {
   const router = useRouter()
 
   useEffect(() => {
-    setWaUrl(getWhatsAppLink('Hola, me interesa una propiedad en Pronto Inmuebles'))
+    setWaUrl(buildWhatsAppLink({
+      message: 'Hola, me interesa una propiedad en Pronto Inmuebles',
+      context: 'hero'
+    }))
   }, [])
 
   const handleSearch = () => {
@@ -171,7 +175,13 @@ export default function Hero() {
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackWhatsAppLead('Hero Section')}
+                  onClick={() => {
+                    trackWhatsAppLead('Hero Section')
+                    trackWhatsAppClick({
+                      context: 'hero',
+                      location: 'hero_cta'
+                    })
+                  }}
                   className="btn-whatsapp px-5 py-3"
                 >
                   <MessageCircle className="w-4 h-4" />

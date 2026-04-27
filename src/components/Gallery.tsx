@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, MessageCircle, MapPin, Expand, Images } from 'lucide-react'
-import { getWhatsAppLink } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import { trackWhatsAppLead } from '@/lib/analytics'
+import { trackWhatsAppClick } from '@/lib/tracking'
 import { getUTMSummary } from '@/lib/utm'
 
-type Project = typeof PROJECTS[0]
+type Project = typeof FALLBACK_PROJECTS[0]
 
 const CATEGORIES = ['Todos', 'Apartamentos', 'Casas', 'Oficinas', 'Remodelaciones']
 
@@ -157,10 +158,28 @@ export default function Gallery({ initialProperties = [] }: { initialProperties?
                   <span className="badge badge-primary shrink-0">{lightbox.category}</span>
                 </div>
                 <a
-                  href={getWhatsAppLink(`Hola, me interesa el proyecto: ${lightbox.title} en ${lightbox.location}` + (typeof window !== 'undefined' ? getUTMSummary() : ''))}
+                  href={buildWhatsAppLink({
+                    message: `Hola, me interesa el proyecto: ${lightbox.title} en ${lightbox.location}`,
+                    context: 'property',
+                    metadata: {
+                      proyecto: lightbox.title,
+                      ubicacion: lightbox.location
+                    }
+                  })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackWhatsAppLead('Gallery Lightbox', lightbox.id)}
+                  onClick={() => {
+                    trackWhatsAppLead('Gallery Lightbox', lightbox.id)
+                    trackWhatsAppClick({
+                      context: 'property',
+                      location: 'gallery',
+                      label: lightbox.title,
+                      metadata: {
+                        proyecto: lightbox.title,
+                        ubicacion: lightbox.location
+                      }
+                    })
+                  }}
                   className="btn-whatsapp py-3 text-sm"
                 >
                   <MessageCircle className="w-4 h-4" />

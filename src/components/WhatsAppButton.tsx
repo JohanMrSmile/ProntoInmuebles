@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Phone, ChevronRight } from 'lucide-react'
-import { getWhatsAppLink, siteConfig } from '@/lib/config'
+import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import { trackCTA, trackPhoneClick, trackWhatsAppLead } from '@/lib/analytics'
 import { getUTMSummary } from '@/lib/utm'
 import { trackWhatsApp, submitLead } from '@/lib/tracker'
@@ -34,8 +35,11 @@ export default function WhatsAppButton() {
   }, [open])
 
   const buildWaUrl = useCallback((msg: string) => {
-    const utmInfo = getUTMSummary()
-    return getWhatsAppLink(msg + utmInfo)
+    return buildWhatsAppLink({
+      message: msg,
+      context: 'lead_capture',
+      metadata: { origen: 'floating_button' }
+    })
   }, [])
 
   if (!visible) return null

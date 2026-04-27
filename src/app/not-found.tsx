@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Home, ArrowRight, Phone, MapPin } from 'lucide-react'
+import { Home, ArrowRight, Phone, MapPin, MessageCircle } from 'lucide-react'
 import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 export default function NotFound() {
   return (
@@ -98,7 +100,26 @@ export default function NotFound() {
           <div className="flex items-center gap-4 text-xs text-slate-400 font-sans">
             <Link href="/servicios" className="hover:text-slate-600 transition-colors">Servicios</Link>
             <Link href="/nosotros"  className="hover:text-slate-600 transition-colors">Nosotros</Link>
-            <Link href="/contacto"  className="hover:text-slate-600 transition-colors">Contacto</Link>
+            <a
+              href={buildWhatsAppLink({
+                message: 'Hola, tengo una consulta',
+                context: 'lead_capture',
+                metadata: { origen: '404_page' }
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackWhatsAppClick({
+                  context: 'lead_capture',
+                  location: 'footer',
+                  label: '404 WhatsApp'
+                })
+              }
+              className="hover:text-slate-600 transition-colors flex items-center gap-1"
+            >
+              <MessageCircle className="w-3 h-3" />
+              WhatsApp
+            </a>
           </div>
         </div>
       </div>

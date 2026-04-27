@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, CheckCircle2, Shield, Calendar, Search, FileText, TrendingUp, Phone } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 export default function AvaluosPage() {
   const inclusions = [
@@ -66,9 +68,26 @@ export default function AvaluosPage() {
                   Un dictamen técnico, formal y con validez legal que determina el valor real de tu propiedad. Protege tu patrimonio y toma decisiones con bases sólidas y respaldo de expertos certificados.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <Link href="/contacto" className="btn bg-primary-400 hover:bg-primary-500 text-white rounded-xl py-3 px-8 font-medium transition-colors">
+                  <a
+                    href={buildWhatsAppLink({
+                      message: 'Hola, estoy interesado en un avalúo inmobiliario',
+                      context: 'service',
+                      metadata: { servicio: 'Avalúo inmobiliario' }
+                    })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      trackWhatsAppClick({
+                        context: 'service',
+                        location: 'services_card',
+                        label: 'Solicitar Avalúo',
+                        metadata: { servicio: 'Avalúo inmobiliario' }
+                      })
+                    }
+                    className="btn bg-primary-400 hover:bg-primary-500 text-white rounded-xl py-3 px-8 font-medium transition-colors"
+                  >
                     Solicitar Avalúo
-                  </Link>
+                  </a>
                 </div>
               </motion.div>
             </div>
@@ -131,10 +150,27 @@ export default function AvaluosPage() {
 
               <div className="pt-6 border-t border-secondary-100">
                 <p className="text-sm text-secondary-600 mb-4 text-center">Asesoría directa con nuestros peritos</p>
-                <Link href="/contacto" className="w-full py-4 bg-white hover:bg-neutral-50 text-secondary-600 rounded-xl font-medium transition-colors flex items-center justify-center shadow-sm">
+                <a
+                  href={buildWhatsAppLink({
+                    message: 'Hola, quiero hablar con un asesor sobre avalúos',
+                    context: 'service',
+                    metadata: { servicio: 'Asesoría avalúos' }
+                  })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackWhatsAppClick({
+                      context: 'service',
+                      location: 'services_card',
+                      label: 'Contactar Asesor Avalúos',
+                      metadata: { servicio: 'Asesoría avalúos' }
+                    })
+                  }
+                  className="w-full py-4 bg-white hover:bg-neutral-50 text-secondary-600 rounded-xl font-medium transition-colors flex items-center justify-center shadow-sm"
+                >
                   <Phone className="w-5 h-5 mr-2" />
                   Contactar Asesor
-                </Link>
+                </a>
               </div>
             </motion.div>
           </div>

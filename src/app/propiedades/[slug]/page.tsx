@@ -4,8 +4,10 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getPropertyBySlug, getAllPropertySlugs } from '@/lib/sanity'
 import { properties as staticProperties } from '@/lib/properties'
-import { getWhatsAppLink, siteConfig } from '@/lib/config'
+import { siteConfig } from '@/lib/config'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
 import FadeIn from '@/components/FadeIn'
+import PropertyAgendaCTA from '@/components/PropertyAgendaCTA'
 import { Metadata, ResolvingMetadata } from 'next'
 import WhatsAppCTA from '@/components/WhatsAppCTA'
 import { getPropertySchema } from '@/lib/schema'
@@ -58,8 +60,13 @@ export default async function PropertyDetail({ params }: Props) {
 
   const propertySchema = getPropertySchema(property)
 
-  const whatsappMessage = `Hola, me interesa la propiedad "${property.title}" que vi en la web.`
-  const whatsappUrl = getWhatsAppLink(whatsappMessage)
+  const whatsappUrl = buildWhatsAppLink({
+    message: `Hola, me interesa la propiedad "${property.title}"`,
+    context: 'property',
+    metadata: {
+      referencia: params.slug
+    }
+  })
 
   const STATS = [
     { icon: Bed,      label: 'Habitaciones', value: property.beds        },
@@ -148,10 +155,7 @@ export default async function PropertyDetail({ params }: Props) {
                     </p>
                     <div className="flex flex-col gap-3">
                       <WhatsAppCTA whatsappUrl={whatsappUrl} propertyId={property._id} />
-                      <Link href="/contacto" className="flex items-center justify-center gap-2 py-3 rounded-button border-2 border-white/20 text-white text-sm font-semibold font-sans hover:bg-white/10 transition-all">
-                        <Calendar className="w-4 h-4 text-gold-400" />
-                        Agendar visita
-                      </Link>
+                      <PropertyAgendaCTA propertyTitle={property.title} slug={params.slug} />
                     </div>
                   </div>
                   <div className="border-t border-white/10 px-7 py-4 flex items-center gap-3">

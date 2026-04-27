@@ -5,8 +5,10 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Home, Key, BarChart3, Blinds, Grid2x2, Layers, Wind,
-  ArrowRight, Check, Sparkles, Building2, Wrench
+  ArrowRight, Check, Sparkles, Building2, Wrench, MessageCircle
 } from 'lucide-react'
+import { buildWhatsAppLink } from '@/lib/whatsapp'
+import { trackWhatsAppClick } from '@/lib/tracking'
 
 const INMOBILIARIA = [
   {
@@ -36,10 +38,10 @@ const INMOBILIARIA = [
 ]
 
 const HOGAR = [
-  { icon: Blinds,  label: 'Cortinas Blackout',   description: 'Control de luz total con acabados premium y garantía de instalación.', color: 'blue'  },
-  { icon: Grid2x2, label: 'Mallas de Seguridad',  description: 'Protección certificada contra insectos con materiales de alta resistencia.', color: 'green' },
-  { icon: Layers,  label: 'Vidrios y Espejos',    description: 'Instalación y reemplazo con vidrio templado y materiales de calidad.', color: 'amber' },
-  { icon: Wind,    label: 'Aires Acondicionados',  description: 'Instalación y mantenimiento preventivo de sistemas eficientes.', color: 'blue'  },
+  { icon: Blinds,  label: 'Cortinas Blackout',   description: 'Control de luz total con acabados premium y garantía de instalación.', color: 'blue', getHref: () => buildWhatsAppLink({ message: 'Hola, estoy interesado en Cortinas Blackout', context: 'service', metadata: { servicio: 'Cortinas Blackout' } })  },
+  { icon: Grid2x2, label: 'Mallas de Seguridad',  description: 'Protección certificada contra insectos con materiales de alta resistencia.', color: 'green', getHref: () => buildWhatsAppLink({ message: 'Hola, estoy interesado en Mallas de Seguridad', context: 'service', metadata: { servicio: 'Mallas de Seguridad' } }) },
+  { icon: Layers,  label: 'Vidrios y Espejos',    description: 'Instalación y reemplazo con vidrio templado y materiales de calidad.', color: 'amber', getHref: () => buildWhatsAppLink({ message: 'Hola, estoy interesado en Vidrios y Espejos', context: 'service', metadata: { servicio: 'Vidrios y Espejos' } }) },
+  { icon: Wind,    label: 'Aires Acondicionados',  description: 'Instalación y mantenimiento preventivo de sistemas eficientes.', color: 'blue', getHref: () => buildWhatsAppLink({ message: 'Hola, estoy interesado en Aires Acondicionados', context: 'service', metadata: { servicio: 'Aires Acondicionados' } })  },
 ]
 
 const PACKAGES = [
@@ -239,7 +241,20 @@ export default function Services() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.08 }}
                     >
-                      <Link href="/servicios" className="group card-elevated p-6 flex flex-col gap-4 h-full block">
+                      <a
+                        href={svc.getHref()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() =>
+                          trackWhatsAppClick({
+                            context: 'service',
+                            location: 'services_card',
+                            label: svc.label,
+                            metadata: { servicio: svc.label }
+                          })
+                        }
+                        className="group card-elevated p-6 flex flex-col gap-4 h-full block"
+                      >
                         <div className={`w-11 h-11 rounded-card ${c.bg} border ${c.border} flex items-center justify-center`}>
                           <svc.icon className={`w-5 h-5 ${c.icon}`} />
                         </div>
@@ -248,9 +263,10 @@ export default function Services() {
                           <p className="text-sm text-slate-500 font-sans leading-relaxed">{svc.description}</p>
                         </div>
                         <span className={`flex items-center gap-1.5 text-xs font-semibold ${c.icon} group-hover:gap-2.5 transition-all duration-200 font-sans`}>
-                          Ver más <ArrowRight className="w-3.5 h-3.5" />
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          Consultar
                         </span>
-                      </Link>
+                      </a>
                     </motion.div>
                   )
                 })}
