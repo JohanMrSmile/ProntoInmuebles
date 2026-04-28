@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ShieldCheck, Megaphone, Banknote, Zap, TrendingUp, Users, Clock, Award, MessageCircle, ArrowRight } from 'lucide-react'
-
+//prueba
 const STATS = [
   { value: '500+',  label: 'Propiedades gestionadas', icon: TrendingUp },
   { value: '1.2k+', label: 'Clientes satisfechos',    icon: Users      },
